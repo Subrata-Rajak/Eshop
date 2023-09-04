@@ -13,3 +13,9 @@ class LoginCheckState extends LoginStates {
 
   LoginCheckState({required this.isChecked});
 }
+
+class LoggingInState extends LoginStates {}
+
+class LoginSuccessState extends LoginStates {}
+
+class LoginErrorState extends LoginStates {}

@@ -1,4 +1,5 @@
 import 'package:eshop/core/common/widgets.dart';
+import 'package:eshop/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -58,15 +59,82 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
                 buildConfirmPasswordTextField(),
                 buildTAndCCheck(),
                 verticalSpace(height: 50),
-                expandedButton(
-                  size: size,
-                  fun: () {},
-                ),
+                buildExpandedButton(size: size),
                 buildLoginNavButton(context),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  BlocProvider<RegisterBloc> buildExpandedButton({required Size size}) {
+    return BlocProvider<RegisterBloc>(
+      create: (context) => sl(),
+      child: BlocBuilder<RegisterBloc, RegisterStates>(
+        builder: (context, state) {
+          if (state is RegisterInitialState || state is RegisterErrorState) {
+            return SizedBox(
+              width: size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  backgroundColor: AppColors.colors.darkBlue,
+                ),
+                onPressed: () {
+                  context.read<RegisterBloc>().add(
+                        RegisteringUserEvent(
+                          name: usernameController.text,
+                          email: emailController.text,
+                          password: passwordController.text,
+                          confirmPassword: confirmPasswordController.text,
+                        ),
+                      );
+                },
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            );
+          } else if (state is RegisteringUserState) {
+            return SizedBox(
+              width: size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  backgroundColor: AppColors.colors.darkBlue,
+                  disabledBackgroundColor: AppColors.colors.darkBlue,
+                ),
+                onPressed: null,
+                child: CircularProgressIndicator(
+                  color: AppColors.colors.white,
+                ),
+              ),
+            );
+          } else if (state is RegisterSuccessState) {
+            return SizedBox(
+              width: size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  backgroundColor: AppColors.colors.darkBlue,
+                  disabledBackgroundColor: AppColors.colors.darkBlue,
+                ),
+                onPressed: null,
+                child: Text(
+                  "Success",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: AppColors.colors.white,
+                  ),
+                ),
+              ),
+            );
+          }
+          return emptyBox();
+        },
       ),
     );
   }
@@ -111,7 +179,7 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
     return Row(
       children: [
         BlocProvider<RegisterBloc>(
-          create: (context) => RegisterBloc(),
+          create: (context) => sl(),
           child: BlocBuilder<RegisterBloc, RegisterStates>(
             builder: (context, state) {
               if (state is RegisterInitialState) {
@@ -162,7 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
 
   BlocProvider<RegisterBloc> buildPasswordTextField() {
     return BlocProvider<RegisterBloc>(
-      create: (context) => RegisterBloc(),
+      create: (context) => sl(),
       child: BlocBuilder<RegisterBloc, RegisterStates>(
         builder: (context, state) {
           if (state is RegisterInitialState) {
@@ -227,6 +295,25 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
               ),
               obscureText: state.isPasswordObscure,
             );
+          } else if (state is RegisteringUserState) {
+            return TextFormField(
+              controller: passwordController,
+              decoration: InputDecoration(
+                disabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                label: const Text("Password"),
+                hintText: "John@123",
+                suffix: Icon(
+                  FontAwesomeIcons.eyeSlash,
+                  color: AppColors.colors.black,
+                ),
+              ),
+              enabled: false,
+              obscureText: true,
+            );
           }
 
           return emptyBox();
@@ -237,7 +324,7 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
 
   BlocProvider<RegisterBloc> buildConfirmPasswordTextField() {
     return BlocProvider<RegisterBloc>(
-      create: (context) => RegisterBloc(),
+      create: (context) => sl(),
       child: BlocBuilder<RegisterBloc, RegisterStates>(
         builder: (context, state) {
           if (state is RegisterInitialState) {
@@ -302,6 +389,25 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
               ),
               obscureText: state.isConfirmPasswordObscure,
             );
+          } else if (state is RegisteringUserState) {
+            return TextFormField(
+              controller: confirmPasswordController,
+              decoration: InputDecoration(
+                enabled: false,
+                disabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                label: const Text("Confirm Password"),
+                hintText: "John@123",
+                suffix: Icon(
+                  FontAwesomeIcons.eyeSlash,
+                  color: AppColors.colors.black,
+                ),
+              ),
+              obscureText: true,
+            );
           }
 
           return emptyBox();
@@ -310,42 +416,95 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
     );
   }
 
-  TextFormField buildEmailTextField() {
-    return TextFormField(
-      controller: emailController,
-      decoration: const InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-        label: Text("Email"),
-        hintText: "john@gmail.com",
+  buildEmailTextField() {
+    return BlocProvider<RegisterBloc>(
+      create: (context) => sl(),
+      child: BlocBuilder<RegisterBloc, RegisterStates>(
+        builder: (context, state) {
+          if (state is RegisterInitialState) {
+            return TextFormField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                label: Text("Email"),
+                hintText: "john@gmail.com",
+              ),
+            );
+          } else if (state is RegisteringUserState) {
+            return TextFormField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                enabled: false,
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                label: Text("Email"),
+                hintText: "john@gmail.com",
+              ),
+            );
+          }
+          return emptyBox();
+        },
       ),
     );
   }
 
-  TextFormField buildUsernameTextField() {
-    return TextFormField(
-      controller: usernameController,
-      decoration: const InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-        label: Text("Username"),
-        hintText: "john",
+  BlocProvider<RegisterBloc> buildUsernameTextField() {
+    return BlocProvider<RegisterBloc>(
+      create: (context) => sl(),
+      child: BlocBuilder<RegisterBloc, RegisterStates>(
+        builder: (context, state) {
+          if (state is RegisterInitialState) {
+            return TextFormField(
+              controller: usernameController,
+              decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                label: Text("Username"),
+                hintText: "john",
+              ),
+            );
+          } else if (state is RegisteringUserState) {
+            return TextFormField(
+              controller: usernameController,
+              decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                label: Text("Username"),
+                hintText: "john",
+              ),
+              enabled: false,
+            );
+          }
+          return emptyBox();
+        },
       ),
     );
   }

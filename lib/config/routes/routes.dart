@@ -1,7 +1,8 @@
+import 'package:eshop/config/routes/route_args.dart';
 import 'package:eshop/config/routes/route_names.dart';
 import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/features/auth/presentation/views/email_for_otp_screen.dart';
-import 'package:eshop/features/auth/presentation/views/forgot_password_screen.dart';
+import 'package:eshop/features/auth/presentation/views/update_password_screen.dart';
 import 'package:eshop/features/auth/presentation/views/login_screen.dart';
 import 'package:eshop/features/auth/presentation/views/otp_verification_screen.dart';
 import 'package:eshop/features/auth/presentation/views/register_screen.dart';
@@ -20,10 +21,12 @@ class AppRoutes {
         },
       ),
       GoRoute(
-        name: AppRouteNames.names.forgotPasswordRouteName,
-        path: AppRoutePaths.paths.forgotPasswordPath,
+        name: AppRouteNames.names.updatePasswordRouteName,
+        path: AppRoutePaths.paths.updatePasswordPath,
         builder: (context, state) {
-          return const ForgotPasswordScreen();
+          final UpdatePasswordScreenArgs args =
+              state.extra as UpdatePasswordScreenArgs;
+          return UpdatePasswordScreen(args: args);
         },
       ),
       GoRoute(
@@ -35,16 +38,20 @@ class AppRoutes {
       ),
       GoRoute(
         name: AppRouteNames.names.emailForOtpRouteName,
-        path: AppRoutePaths.paths.emailForOtpPath,
+        path: AppRoutePaths.paths.initialPath,
         builder: (context, state) {
           return const EmailForOtpScreen();
         },
       ),
       GoRoute(
         name: AppRouteNames.names.otpVerificationRouteName,
-        path: AppRoutePaths.paths.initialPath,
+        path: AppRoutePaths.paths.otpVerificationPath,
         builder: (context, state) {
-          return const OtpVerificationScreen();
+          OtpVerificationScreenArgs args =
+              state.extra as OtpVerificationScreenArgs;
+          return OtpVerificationScreen(
+            args: args,
+          );
         },
       ),
     ],

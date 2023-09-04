@@ -2,8 +2,12 @@ import 'package:eshop/config/routes/routes.dart';
 import 'package:eshop/config/themes/dark.dart';
 import 'package:eshop/config/themes/light.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'injection_container.dart';
 
-void main() {
+void main() async {
+  await initDep();
+  await GetStorage.init();
   runApp(const MyApp());
 }
 

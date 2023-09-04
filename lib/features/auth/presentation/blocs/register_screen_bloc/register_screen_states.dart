@@ -19,3 +19,9 @@ class RegisterCheckState extends RegisterStates {
 
   RegisterCheckState({required this.isChecked});
 }
+
+class RegisteringUserState extends RegisterStates {}
+
+class RegisterSuccessState extends RegisterStates {}
+
+class RegisterErrorState extends RegisterStates {}

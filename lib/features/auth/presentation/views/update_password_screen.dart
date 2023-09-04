@@ -1,25 +1,44 @@
+import 'package:eshop/config/routes/route_args.dart';
+import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/core/common/widgets.dart';
-import 'package:eshop/features/auth/presentation/blocs/forgot_password_screen_bloc/forgot_password_screen_bloc.dart';
-import 'package:eshop/features/auth/presentation/blocs/forgot_password_screen_bloc/forgot_password_screen_states.dart';
+import 'package:eshop/features/auth/presentation/blocs/update_password_screen_bloc/update_password_screen_bloc.dart';
+import 'package:eshop/features/auth/presentation/blocs/update_password_screen_bloc/update_password_screen_events.dart';
+import 'package:eshop/features/auth/presentation/blocs/update_password_screen_bloc/update_password_screen_states.dart';
+import 'package:eshop/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/values/colors.dart';
-import '../blocs/forgot_password_screen_bloc/forgot_password_screen_events.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+class UpdatePasswordScreen extends StatefulWidget {
+  final UpdatePasswordScreenArgs args;
+  const UpdatePasswordScreen({
+    super.key,
+    required this.args,
+  });
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<UpdatePasswordScreen> createState() => _UpdatePasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
+class _UpdatePasswordScreenState extends State<UpdatePasswordScreen>
     with CommonWidgets {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+  final TextEditingController currentPasswordController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    currentPasswordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -36,13 +55,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 verticalSpace(height: 40),
                 buildHeader(),
                 verticalSpace(height: 50),
+                buildCurrentPasswordTextField(),
+                verticalSpace(height: 20),
                 buildPasswordTextField(),
                 verticalSpace(height: 20),
                 buildConfirmPasswordTextField(),
                 verticalSpace(height: 50),
-                expandedButton(
+                buildExpandedButton(
                   size: size,
-                  fun: () {},
                 ),
               ],
             ),
@@ -52,12 +72,69 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     );
   }
 
-  BlocProvider<ForgotPasswordBloc> buildPasswordTextField() {
-    return BlocProvider<ForgotPasswordBloc>(
-      create: (context) => ForgotPasswordBloc(),
-      child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordStates>(
+  buildExpandedButton({required Size size}) {
+    return BlocProvider<UpdatePasswordScreenBloc>(
+      create: (context) => sl(),
+      child: BlocConsumer<UpdatePasswordScreenBloc, UpdatePasswordScreenStates>(
+        listener: (context, state) {
+          if (state is UpdatingPasswordSuccessState) {
+            context.replace(AppRoutePaths.paths.loginPath);
+          }
+        },
         builder: (context, state) {
-          if (state is ForgotPasswordInitialState) {
+          if (state is UpdatePasswordInitialState ||
+              state is UpdatingPasswordErrorState) {
+            return SizedBox(
+              width: size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  backgroundColor: AppColors.colors.darkBlue,
+                ),
+                onPressed: () {
+                  context.read<UpdatePasswordScreenBloc>().add(
+                        UpdatePasswordEvent(
+                          currentPassword: currentPasswordController.text,
+                          newPassword: passwordController.text,
+                          confirmPassword: confirmPasswordController.text,
+                          email: widget.args.email,
+                        ),
+                      );
+                },
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            );
+          } else if (state is UpdatingPasswordState) {
+            return SizedBox(
+              width: size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  backgroundColor: AppColors.colors.darkBlue,
+                  disabledBackgroundColor: AppColors.colors.darkBlue,
+                ),
+                onPressed: null,
+                child: CircularProgressIndicator(
+                  color: AppColors.colors.white,
+                ),
+              ),
+            );
+          }
+          return emptyBox();
+        },
+      ),
+    );
+  }
+
+  BlocProvider<UpdatePasswordScreenBloc> buildPasswordTextField() {
+    return BlocProvider<UpdatePasswordScreenBloc>(
+      create: (context) => sl(),
+      child: BlocBuilder<UpdatePasswordScreenBloc, UpdatePasswordScreenStates>(
+        builder: (context, state) {
+          if (state is UpdatePasswordInitialState) {
             return TextFormField(
               controller: passwordController,
               decoration: InputDecoration(
@@ -76,7 +153,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 suffix: GestureDetector(
                   onTap: () {
                     context
-                        .read<ForgotPasswordBloc>()
+                        .read<UpdatePasswordScreenBloc>()
                         .add(TogglePasswordObscureEvent());
                   },
                   child: Icon(
@@ -87,7 +164,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               ),
               obscureText: true,
             );
-          } else if (state is ForgotPasswordScreenPasswordFieldState) {
+          } else if (state is UpdatePasswordScreenPasswordFieldState) {
             return TextFormField(
               controller: passwordController,
               decoration: InputDecoration(
@@ -106,7 +183,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 suffix: GestureDetector(
                   onTap: () {
                     context
-                        .read<ForgotPasswordBloc>()
+                        .read<UpdatePasswordScreenBloc>()
                         .add(TogglePasswordObscureEvent());
                   },
                   child: Icon(
@@ -127,12 +204,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     );
   }
 
-  BlocProvider<ForgotPasswordBloc> buildConfirmPasswordTextField() {
-    return BlocProvider<ForgotPasswordBloc>(
-      create: (context) => ForgotPasswordBloc(),
-      child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordStates>(
+  BlocProvider<UpdatePasswordScreenBloc> buildConfirmPasswordTextField() {
+    return BlocProvider<UpdatePasswordScreenBloc>(
+      create: (context) => sl(),
+      child: BlocBuilder<UpdatePasswordScreenBloc, UpdatePasswordScreenStates>(
         builder: (context, state) {
-          if (state is ForgotPasswordInitialState) {
+          if (state is UpdatePasswordInitialState) {
             return TextFormField(
               controller: confirmPasswordController,
               decoration: InputDecoration(
@@ -151,7 +228,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 suffix: GestureDetector(
                   onTap: () {
                     context
-                        .read<ForgotPasswordBloc>()
+                        .read<UpdatePasswordScreenBloc>()
                         .add(ToggleConfirmPasswordObscureEvent());
                   },
                   child: Icon(
@@ -162,7 +239,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               ),
               obscureText: true,
             );
-          } else if (state is ForgotPasswordScreenConfirmPasswordFieldState) {
+          } else if (state is UpdatePasswordScreenConfirmPasswordFieldState) {
             return TextFormField(
               controller: confirmPasswordController,
               decoration: InputDecoration(
@@ -181,7 +258,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 suffix: GestureDetector(
                   onTap: () {
                     context
-                        .read<ForgotPasswordBloc>()
+                        .read<UpdatePasswordScreenBloc>()
                         .add(ToggleConfirmPasswordObscureEvent());
                   },
                   child: Icon(
@@ -193,6 +270,81 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 ),
               ),
               obscureText: state.isConfirmPasswordObscure,
+            );
+          }
+
+          return emptyBox();
+        },
+      ),
+    );
+  }
+
+  BlocProvider<UpdatePasswordScreenBloc> buildCurrentPasswordTextField() {
+    return BlocProvider<UpdatePasswordScreenBloc>(
+      create: (context) => sl(),
+      child: BlocBuilder<UpdatePasswordScreenBloc, UpdatePasswordScreenStates>(
+        builder: (context, state) {
+          if (state is UpdatePasswordInitialState) {
+            return TextFormField(
+              controller: currentPasswordController,
+              decoration: InputDecoration(
+                enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                label: const Text("Current Password"),
+                hintText: "John@123",
+                suffix: GestureDetector(
+                  onTap: () {
+                    context
+                        .read<UpdatePasswordScreenBloc>()
+                        .add(ToggleCurrentPasswordObscureEvent());
+                  },
+                  child: Icon(
+                    FontAwesomeIcons.eyeSlash,
+                    color: AppColors.colors.black,
+                  ),
+                ),
+              ),
+              obscureText: true,
+            );
+          } else if (state is UpdatePasswordScreenCurrentPasswordFieldState) {
+            return TextFormField(
+              controller: currentPasswordController,
+              decoration: InputDecoration(
+                enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                label: const Text("Current Password"),
+                hintText: "John@123",
+                suffix: GestureDetector(
+                  onTap: () {
+                    context
+                        .read<UpdatePasswordScreenBloc>()
+                        .add(ToggleConfirmPasswordObscureEvent());
+                  },
+                  child: Icon(
+                    state.isCurrentPasswordObscure
+                        ? FontAwesomeIcons.eyeSlash
+                        : FontAwesomeIcons.eye,
+                    color: AppColors.colors.black,
+                  ),
+                ),
+              ),
+              obscureText: state.isCurrentPasswordObscure,
             );
           }
 

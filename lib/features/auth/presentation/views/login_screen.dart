@@ -4,6 +4,7 @@ import 'package:eshop/core/values/colors.dart';
 import 'package:eshop/features/auth/presentation/blocs/login_screen_bloc/login_screen_bloc.dart';
 import 'package:eshop/features/auth/presentation/blocs/login_screen_bloc/login_screen_events.dart';
 import 'package:eshop/features/auth/presentation/blocs/login_screen_bloc/login_screen_states.dart';
+import 'package:eshop/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -53,15 +54,82 @@ class _LoginScreenState extends State<LoginScreen> with CommonWidgets {
                   ],
                 ),
                 verticalSpace(height: 50),
-                expandedButton(
+                buildExpandedButton(
                   size: size,
-                  fun: () {},
                 ),
                 buildRegisterNavButton(context)
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  buildExpandedButton({required Size size}) {
+    return BlocProvider<LoginBloc>(
+      create: (context) => sl(),
+      child: BlocBuilder<LoginBloc, LoginStates>(
+        builder: (context, state) {
+          if (state is LoginInitialState || state is LoginErrorState) {
+            return SizedBox(
+              width: size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  backgroundColor: AppColors.colors.darkBlue,
+                ),
+                onPressed: () {
+                  context.read<LoginBloc>().add(
+                        LoginUserEvent(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        ),
+                      );
+                },
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            );
+          } else if (state is LoggingInState) {
+            return SizedBox(
+              width: size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  backgroundColor: AppColors.colors.darkBlue,
+                  disabledBackgroundColor: AppColors.colors.darkBlue,
+                ),
+                onPressed: null,
+                child: CircularProgressIndicator(
+                  color: AppColors.colors.white,
+                ),
+              ),
+            );
+          } else if (state is LoginSuccessState) {
+            return SizedBox(
+              width: size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  backgroundColor: AppColors.colors.darkBlue,
+                  disabledBackgroundColor: AppColors.colors.darkBlue,
+                ),
+                onPressed: null,
+                child: Text(
+                  "Success",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: AppColors.colors.white,
+                  ),
+                ),
+              ),
+            );
+          }
+          return emptyBox();
+        },
       ),
     );
   }
@@ -112,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> with CommonWidgets {
           },
         ),
       ),
-      onPressed: () => context.push(AppRoutePaths.paths.forgotPasswordPath),
+      onPressed: () => context.push(AppRoutePaths.paths.updatePasswordPath),
       child: Text(
         "Forgot Password?",
         style: TextStyle(color: AppColors.colors.red),
@@ -124,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> with CommonWidgets {
     return Row(
       children: [
         BlocProvider<LoginBloc>(
-          create: (context) => LoginBloc(),
+          create: (context) => sl(),
           child: BlocBuilder<LoginBloc, LoginStates>(
             builder: (context, state) {
               if (state is LoginInitialState) {
@@ -175,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> with CommonWidgets {
 
   BlocProvider<LoginBloc> buildPasswordTextField() {
     return BlocProvider<LoginBloc>(
-      create: (context) => LoginBloc(),
+      create: (context) => sl(),
       child: BlocBuilder<LoginBloc, LoginStates>(
         builder: (context, state) {
           if (state is LoginInitialState) {
