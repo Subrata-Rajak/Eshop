@@ -9,3 +9,9 @@ class UpdatePasswordScreenArgs {
 
   UpdatePasswordScreenArgs({required this.email});
 }
+
+class ProductDetailsScreenArgs {
+  final String productId;
+
+  ProductDetailsScreenArgs({required this.productId});
+}

@@ -6,6 +6,8 @@ import 'package:eshop/features/auth/presentation/views/update_password_screen.da
 import 'package:eshop/features/auth/presentation/views/login_screen.dart';
 import 'package:eshop/features/auth/presentation/views/otp_verification_screen.dart';
 import 'package:eshop/features/auth/presentation/views/register_screen.dart';
+import 'package:eshop/features/home/presentation/views/home_screen.dart';
+import 'package:eshop/features/product_details/presentation/views/product_details_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRoutes {
@@ -38,7 +40,7 @@ class AppRoutes {
       ),
       GoRoute(
         name: AppRouteNames.names.emailForOtpRouteName,
-        path: AppRoutePaths.paths.initialPath,
+        path: AppRoutePaths.paths.emailForOtpPath,
         builder: (context, state) {
           return const EmailForOtpScreen();
         },
@@ -54,6 +56,22 @@ class AppRoutes {
           );
         },
       ),
+      GoRoute(
+        name: AppRouteNames.names.homeRouteName,
+        path: AppRoutePaths.paths.initialPath,
+        builder: (context, state) {
+          return const HomeScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.productDetailsPath,
+        name: AppRouteNames.names.productDetailsName,
+        builder: (context, state) {
+          ProductDetailsScreenArgs args =
+              state.extra as ProductDetailsScreenArgs;
+          return ProductDetailsScreen(args: args);
+        },
+      )
     ],
     initialLocation: AppRoutePaths.paths.initialPath,
   );

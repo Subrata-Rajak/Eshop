@@ -6,4 +6,6 @@ class AppRouteNames {
   final registerRouteName = 'Register';
   final emailForOtpRouteName = 'Email for Otp';
   final otpVerificationRouteName = 'Otp Verification';
+  final homeRouteName = 'Home';
+  final productDetailsName = "Product Details";
 }

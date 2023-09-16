@@ -72,7 +72,12 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
   BlocProvider<RegisterBloc> buildExpandedButton({required Size size}) {
     return BlocProvider<RegisterBloc>(
       create: (context) => sl(),
-      child: BlocBuilder<RegisterBloc, RegisterStates>(
+      child: BlocConsumer<RegisterBloc, RegisterStates>(
+        listener: (context, state) {
+          if (state is RegisterSuccessState) {
+            context.replace(AppRoutePaths.paths.loginPath);
+          }
+        },
         builder: (context, state) {
           if (state is RegisterInitialState || state is RegisterErrorState) {
             return SizedBox(
@@ -110,25 +115,6 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
                 onPressed: null,
                 child: CircularProgressIndicator(
                   color: AppColors.colors.white,
-                ),
-              ),
-            );
-          } else if (state is RegisterSuccessState) {
-            return SizedBox(
-              width: size.width,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  backgroundColor: AppColors.colors.darkBlue,
-                  disabledBackgroundColor: AppColors.colors.darkBlue,
-                ),
-                onPressed: null,
-                child: Text(
-                  "Success",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: AppColors.colors.white,
-                  ),
                 ),
               ),
             );

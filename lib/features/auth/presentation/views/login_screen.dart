@@ -69,7 +69,12 @@ class _LoginScreenState extends State<LoginScreen> with CommonWidgets {
   buildExpandedButton({required Size size}) {
     return BlocProvider<LoginBloc>(
       create: (context) => sl(),
-      child: BlocBuilder<LoginBloc, LoginStates>(
+      child: BlocConsumer<LoginBloc, LoginStates>(
+        listener: (context, state) {
+          if (state is LoginSuccessState) {
+            context.replace(AppRoutePaths.paths.homePath);
+          }
+        },
         builder: (context, state) {
           if (state is LoginInitialState || state is LoginErrorState) {
             return SizedBox(
@@ -105,25 +110,6 @@ class _LoginScreenState extends State<LoginScreen> with CommonWidgets {
                 onPressed: null,
                 child: CircularProgressIndicator(
                   color: AppColors.colors.white,
-                ),
-              ),
-            );
-          } else if (state is LoginSuccessState) {
-            return SizedBox(
-              width: size.width,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  backgroundColor: AppColors.colors.darkBlue,
-                  disabledBackgroundColor: AppColors.colors.darkBlue,
-                ),
-                onPressed: null,
-                child: Text(
-                  "Success",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: AppColors.colors.white,
-                  ),
                 ),
               ),
             );

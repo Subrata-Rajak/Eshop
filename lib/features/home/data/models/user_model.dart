@@ -9,26 +9,18 @@ User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
 
 class User {
-  String message;
   UserClass user;
-  String token;
 
   User({
-    required this.message,
     required this.user,
-    required this.token,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        message: json["message"],
         user: UserClass.fromJson(json["user"]),
-        token: json["token"],
       );
 
   Map<String, dynamic> toJson() => {
-        "message": message,
         "user": user.toJson(),
-        "token": token,
       };
 }
 
@@ -37,11 +29,11 @@ class UserClass {
   String name;
   String email;
   String password;
-  List<dynamic> reviewsAndRatings;
+  List<String?> reviewsAndRatings;
   List<Address> address;
-  List<dynamic> wishList;
-  List<dynamic> cartList;
-  List<dynamic> ordersList;
+  List<String?> wishList;
+  List<String?> cartList;
+  List<String?> ordersList;
   int v;
   String profileImageUrl;
 
@@ -65,12 +57,12 @@ class UserClass {
         email: json["email"],
         password: json["password"],
         reviewsAndRatings:
-            List<dynamic>.from(json["reviews_and_ratings"].map((x) => x)),
+            List<String?>.from(json["reviews_and_ratings"].map((x) => x)),
         address:
             List<Address>.from(json["address"].map((x) => Address.fromJson(x))),
-        wishList: List<dynamic>.from(json["wish_list"].map((x) => x)),
-        cartList: List<dynamic>.from(json["cart_list"].map((x) => x)),
-        ordersList: List<dynamic>.from(json["orders_list"].map((x) => x)),
+        wishList: List<String?>.from(json["wish_list"].map((x) => x)),
+        cartList: List<String?>.from(json["cart_list"].map((x) => x)),
+        ordersList: List<String?>.from(json["orders_list"].map((x) => x)),
         v: json["__v"],
         profileImageUrl: json["profile_image_url"],
       );
@@ -81,11 +73,11 @@ class UserClass {
         "email": email,
         "password": password,
         "reviews_and_ratings":
-            List<dynamic>.from(reviewsAndRatings.map((x) => x)),
-        "address": List<dynamic>.from(address.map((x) => x.toJson())),
-        "wish_list": List<dynamic>.from(wishList.map((x) => x)),
-        "cart_list": List<dynamic>.from(cartList.map((x) => x)),
-        "orders_list": List<dynamic>.from(ordersList.map((x) => x)),
+            List<String?>.from(reviewsAndRatings.map((x) => x)),
+        "address": List<Address>.from(address.map((x) => x.toJson())),
+        "wish_list": List<String?>.from(wishList.map((x) => x)),
+        "cart_list": List<String?>.from(cartList.map((x) => x)),
+        "orders_list": List<String?>.from(ordersList.map((x) => x)),
         "__v": v,
         "profile_image_url": profileImageUrl,
       };
@@ -98,6 +90,8 @@ class Address {
   String area;
   String landmark;
   String id;
+  String pincode;
+  bool selected;
 
   Address({
     required this.country,
@@ -106,6 +100,8 @@ class Address {
     required this.area,
     required this.landmark,
     required this.id,
+    required this.pincode,
+    required this.selected,
   });
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
@@ -115,6 +111,8 @@ class Address {
         area: json["area"],
         landmark: json["landmark"],
         id: json["_id"],
+        pincode: json["pincode"],
+        selected: json['selected'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -124,5 +122,7 @@ class Address {
         "area": area,
         "landmark": landmark,
         "_id": id,
+        "pincode": pincode,
+        'selected': selected,
       };
 }

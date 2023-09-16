@@ -8,4 +8,5 @@ class AppRoutePaths {
   final registerPath = '/register';
   final emailForOtpPath = '/email_for_otp';
   final otpVerificationPath = '/otp_verification';
+  final productDetailsPath = '/product_details';
 }

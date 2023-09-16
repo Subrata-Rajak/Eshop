@@ -5,14 +5,14 @@ class GetBox {
 
   final box = GetStorage();
 
-  writeToLocalDb({
+  Future<void> writeToLocalDb({
     required String key,
     required value,
-  }) {
-    box.write(key, value);
+  }) async {
+    await box.write(key, value);
   }
 
-  readFromLocalDb({required String key}) {
+  String? readFromLocalDb({required String key}) {
     return box.read(key);
   }
 }

@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:eshop/config/get_storage/get_box.dart';
 import 'package:eshop/config/get_storage/local_keys.dart';
 import 'package:eshop/core/constants/api_constants.dart';
-import 'package:eshop/features/auth/data/data_source/remote/http_service.dart';
 import 'package:eshop/features/auth/data/models/user_model.dart';
+
+import '../../../../../core/common/service.dart';
 
 class AuthService {
   final client = HttpService.httpClient;
@@ -41,11 +42,20 @@ class AuthService {
         user = userFromJson(response.body);
         var userToken =
             GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userTokenKey);
+        var userEmail =
+            GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userEmailKey);
 
-        if (!userToken) {
-          GetBox.getBox.writeToLocalDb(
+        if (userToken == null) {
+          await GetBox.getBox.writeToLocalDb(
             key: AppLocalKeys.keys.userTokenKey,
             value: user.token,
+          );
+        }
+
+        if (userEmail == null) {
+          await GetBox.getBox.writeToLocalDb(
+            key: AppLocalKeys.keys.userEmailKey,
+            value: user.user.email,
           );
         }
       }
@@ -82,20 +92,8 @@ class AuthService {
         body: jsonEncode(data),
       );
 
-      User user;
-
       if (response.statusCode == 201) {
         res = true;
-        user = userFromJson(response.body);
-        var userToken =
-            GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userTokenKey);
-
-        if (!userToken) {
-          GetBox.getBox.writeToLocalDb(
-            key: AppLocalKeys.keys.userTokenKey,
-            value: user.token,
-          );
-        }
       }
     } catch (error) {
       print("Error while Registering User: $error");
