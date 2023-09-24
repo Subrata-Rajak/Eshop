@@ -1,3 +1,5 @@
+import 'package:eshop/config/routes/route_args.dart';
+import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/core/common/widgets.dart';
 import 'package:eshop/core/values/colors.dart';
 import 'package:eshop/features/home/domain/entity/all_product_categories_entity.dart';
@@ -9,6 +11,7 @@ import 'package:eshop/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../domain/entity/user_entity.dart';
 import '../blocs/home_screen_bloc/home_screen_states.dart';
@@ -102,6 +105,15 @@ class _HomeScreenState extends State<HomeScreen> with CommonWidgets {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
+            onTap: () {
+              context.push(
+                AppRoutePaths.paths.productByCategoryPath,
+                extra: ProductByCategoryScreenArgs(
+                  categoryName: allProductsCategories
+                      .allProductCategories[index].categoryName,
+                ),
+              );
+            },
             child: CircleAvatar(
               backgroundImage: NetworkImage(
                 allProductsCategories
@@ -135,6 +147,9 @@ class _HomeScreenState extends State<HomeScreen> with CommonWidgets {
         Row(
           children: [
             GestureDetector(
+              onTap: () {
+                context.push(AppRoutePaths.paths.profilePath);
+              },
               child: CircleAvatar(
                 backgroundImage: NetworkImage(user.profileImageUrl),
                 radius: 22,
@@ -171,6 +186,9 @@ class _HomeScreenState extends State<HomeScreen> with CommonWidgets {
         Row(
           children: [
             GestureDetector(
+              onTap: () {
+                //todo: implement search feature
+              },
               child: Icon(
                 FontAwesomeIcons.magnifyingGlass,
                 color: AppColors.colors.black,
@@ -178,6 +196,9 @@ class _HomeScreenState extends State<HomeScreen> with CommonWidgets {
             ),
             horizontalSpace(width: 15),
             GestureDetector(
+              onTap: () {
+                context.push(AppRoutePaths.paths.cartPath);
+              },
               child: Icon(
                 FontAwesomeIcons.cartShopping,
                 color: AppColors.colors.black,

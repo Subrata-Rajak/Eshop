@@ -7,5 +7,9 @@ class AppRouteNames {
   final emailForOtpRouteName = 'Email for Otp';
   final otpVerificationRouteName = 'Otp Verification';
   final homeRouteName = 'Home';
-  final productDetailsName = "Product Details";
+  final productDetailsRouteName = "Product Details";
+  final profileRouteName = "User Profile";
+  final wishlistRouteName = "Wishlist";
+  final cartRouteName = "Cart";
+  final productByCategoryRouteName = "Product by category";
 }

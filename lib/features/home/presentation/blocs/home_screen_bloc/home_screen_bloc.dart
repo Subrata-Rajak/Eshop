@@ -35,7 +35,7 @@ class HomeBloc extends Bloc<HomeScreenEvents, HomeScreenStates> {
       AllProductsEntity? allProducts =
           await getAllProductsUsecase.getAllProducts();
 
-      if (user != null && allProductCategories != null) {
+      if (user != null && allProductCategories != null && allProducts != null) {
         emit(HomeInitialDataFetchingSuccessState(
           user: user,
           allProductsCategories: allProductCategories,

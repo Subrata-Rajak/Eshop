@@ -9,4 +9,8 @@ class AppRoutePaths {
   final emailForOtpPath = '/email_for_otp';
   final otpVerificationPath = '/otp_verification';
   final productDetailsPath = '/product_details';
+  final profilePath = "/user_profile";
+  final wishlistPath = "/wishlist";
+  final cartPath = '/cart';
+  final productByCategoryPath = '/product_by_category';
 }

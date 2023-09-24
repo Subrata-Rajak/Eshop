@@ -15,3 +15,9 @@ class ProductDetailsScreenArgs {
 
   ProductDetailsScreenArgs({required this.productId});
 }
+
+class ProductByCategoryScreenArgs {
+  final String categoryName;
+
+  ProductByCategoryScreenArgs({required this.categoryName});
+}

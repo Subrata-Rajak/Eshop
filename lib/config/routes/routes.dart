@@ -6,9 +6,14 @@ import 'package:eshop/features/auth/presentation/views/update_password_screen.da
 import 'package:eshop/features/auth/presentation/views/login_screen.dart';
 import 'package:eshop/features/auth/presentation/views/otp_verification_screen.dart';
 import 'package:eshop/features/auth/presentation/views/register_screen.dart';
+import 'package:eshop/features/cart/presentation/views/cart_screen.dart';
 import 'package:eshop/features/home/presentation/views/home_screen.dart';
+import 'package:eshop/features/home/presentation/views/profile_screen.dart';
+import 'package:eshop/features/home/presentation/views/wishlist_screen.dart';
 import 'package:eshop/features/product_details/presentation/views/product_details_screen.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/products_by_category/presentation/views/products_by_category_screen.dart';
 
 class AppRoutes {
   static AppRoutes routes = AppRoutes();
@@ -65,13 +70,45 @@ class AppRoutes {
       ),
       GoRoute(
         path: AppRoutePaths.paths.productDetailsPath,
-        name: AppRouteNames.names.productDetailsName,
+        name: AppRouteNames.names.productDetailsRouteName,
         builder: (context, state) {
           ProductDetailsScreenArgs args =
               state.extra as ProductDetailsScreenArgs;
           return ProductDetailsScreen(args: args);
         },
-      )
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.profilePath,
+        name: AppRouteNames.names.profileRouteName,
+        builder: (context, state) {
+          return const ProfileScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.wishlistPath,
+        name: AppRouteNames.names.wishlistRouteName,
+        builder: (context, state) {
+          return const WishlistScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.cartPath,
+        name: AppRouteNames.names.cartRouteName,
+        builder: (context, state) {
+          return const CartDetailsScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.productByCategoryPath,
+        name: AppRouteNames.names.productByCategoryRouteName,
+        builder: (context, state) {
+          ProductByCategoryScreenArgs args =
+              state.extra as ProductByCategoryScreenArgs;
+          return ProductsByCategoryScreen(
+            categoryName: args.categoryName,
+          );
+        },
+      ),
     ],
     initialLocation: AppRoutePaths.paths.initialPath,
   );

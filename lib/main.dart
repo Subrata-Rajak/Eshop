@@ -1,5 +1,5 @@
 import 'package:eshop/config/routes/routes.dart';
-import 'package:eshop/config/themes/dark.dart';
+// import 'package:eshop/config/themes/dark.dart';
 import 'package:eshop/config/themes/light.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Flutter Demo',
       theme: AppLightTheme.theme.getLightTheme(),
-      darkTheme: AppDarkTheme.theme.getDarkTheme(),
+      // darkTheme: AppDarkTheme.theme.getDarkTheme(),
       debugShowCheckedModeBanner: false,
       routerConfig: AppRoutes.routes.router,
     );
