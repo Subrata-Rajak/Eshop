@@ -7,9 +7,6 @@ class UserEntity {
   final int v;
   final List<Address> addresses;
   final List<String?> reviewsAndRatings;
-  final List<String?> ordersList;
-  final List<String?> wishList;
-  final List<String?> cartList;
 
   UserEntity({
     required this.id,
@@ -20,9 +17,6 @@ class UserEntity {
     required this.v,
     required this.addresses,
     required this.reviewsAndRatings,
-    required this.wishList,
-    required this.cartList,
-    required this.ordersList,
   });
 }
 

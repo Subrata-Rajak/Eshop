@@ -1,6 +1,7 @@
 import 'package:eshop/config/routes/route_args.dart';
 import 'package:eshop/config/routes/route_names.dart';
 import 'package:eshop/config/routes/route_paths.dart';
+import 'package:eshop/features/address/presentation/views/address_details_screen.dart';
 import 'package:eshop/features/auth/presentation/views/email_for_otp_screen.dart';
 import 'package:eshop/features/auth/presentation/views/update_password_screen.dart';
 import 'package:eshop/features/auth/presentation/views/login_screen.dart';
@@ -10,6 +11,9 @@ import 'package:eshop/features/cart/presentation/views/cart_screen.dart';
 import 'package:eshop/features/home/presentation/views/home_screen.dart';
 import 'package:eshop/features/home/presentation/views/profile_screen.dart';
 import 'package:eshop/features/home/presentation/views/wishlist_screen.dart';
+import 'package:eshop/features/order_details/presentation/views/order_place_screen.dart';
+import 'package:eshop/features/order_details/presentation/views/order_summary.dart';
+import 'package:eshop/features/order_details/presentation/views/payment_method_screen.dart';
 import 'package:eshop/features/product_details/presentation/views/product_details_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -63,7 +67,7 @@ class AppRoutes {
       ),
       GoRoute(
         name: AppRouteNames.names.homeRouteName,
-        path: AppRoutePaths.paths.initialPath,
+        path: AppRoutePaths.paths.homePath,
         builder: (context, state) {
           return const HomeScreen();
         },
@@ -99,6 +103,33 @@ class AppRoutes {
         },
       ),
       GoRoute(
+        path: AppRoutePaths.paths.paymentMethodPath,
+        name: AppRouteNames.names.paymentMethodRouteName,
+        builder: (context, state) {
+          PaymentMethodScreenArgs args = state.extra as PaymentMethodScreenArgs;
+          return PaymentMethodScreen(
+            args: args,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.addressPath,
+        name: AppRouteNames.names.addressRouteName,
+        builder: (context, state) {
+          return const AddressDetailsScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.orderPlacePath,
+        name: AppRouteNames.names.orderPlaceRouteName,
+        builder: (context, state) {
+          OrderPlaceScreenArgs args = state.extra as OrderPlaceScreenArgs;
+          return OrderPlaceScreen(
+            args: args,
+          );
+        },
+      ),
+      GoRoute(
         path: AppRoutePaths.paths.productByCategoryPath,
         name: AppRouteNames.names.productByCategoryRouteName,
         builder: (context, state) {
@@ -109,7 +140,15 @@ class AppRoutes {
           );
         },
       ),
+      GoRoute(
+        path: AppRoutePaths.paths.orderSummaryPath,
+        name: AppRouteNames.names.orderSummaryRouteName,
+        builder: (context, state) {
+          OrderSummaryScreenArgs args = state.extra as OrderSummaryScreenArgs;
+          return OrderSummaryScreen(args: args);
+        },
+      ),
     ],
-    initialLocation: AppRoutePaths.paths.initialPath,
+    initialLocation: AppRoutePaths.paths.homePath,
   );
 }

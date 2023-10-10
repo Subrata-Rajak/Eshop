@@ -27,9 +27,6 @@ class UserMapper {
           )
           .toList(),
       reviewsAndRatings: user.user.reviewsAndRatings,
-      wishList: user.user.wishList,
-      cartList: user.user.cartList,
-      ordersList: user.user.ordersList,
     );
   }
 
@@ -57,9 +54,6 @@ class UserMapper {
             ),
           )
           .toList(),
-      wishList: entity.wishList,
-      cartList: entity.cartList,
-      ordersList: entity.ordersList,
       v: entity.v,
       profileImageUrl: entity.profileImageUrl,
     ));

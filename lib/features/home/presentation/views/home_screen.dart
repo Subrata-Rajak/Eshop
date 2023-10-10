@@ -173,6 +173,9 @@ class _HomeScreenState extends State<HomeScreen> with CommonWidgets {
                   ),
                   horizontalSpace(width: 10),
                   GestureDetector(
+                    onTap: () {
+                      context.push(AppRoutePaths.paths.addressPath);
+                    },
                     child: Icon(
                       FontAwesomeIcons.caretDown,
                       color: AppColors.colors.black,

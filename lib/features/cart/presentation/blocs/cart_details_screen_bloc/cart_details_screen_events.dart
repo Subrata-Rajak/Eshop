@@ -13,3 +13,9 @@ class DecreaseCartQuantityEvent extends CartDetailsScreenEvents {
 
   DecreaseCartQuantityEvent({required this.productId});
 }
+
+class RemoveFromCartEvent extends CartDetailsScreenEvents {
+  final String productId;
+
+  RemoveFromCartEvent({required this.productId});
+}

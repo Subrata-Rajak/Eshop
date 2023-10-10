@@ -31,9 +31,6 @@ class UserClass {
   String password;
   List<String?> reviewsAndRatings;
   List<Address> address;
-  List<String?> wishList;
-  List<String?> cartList;
-  List<String?> ordersList;
   int v;
   String profileImageUrl;
 
@@ -44,9 +41,6 @@ class UserClass {
     required this.password,
     required this.reviewsAndRatings,
     required this.address,
-    required this.wishList,
-    required this.cartList,
-    required this.ordersList,
     required this.v,
     required this.profileImageUrl,
   });
@@ -60,9 +54,6 @@ class UserClass {
             List<String?>.from(json["reviews_and_ratings"].map((x) => x)),
         address:
             List<Address>.from(json["address"].map((x) => Address.fromJson(x))),
-        wishList: List<String?>.from(json["wish_list"].map((x) => x)),
-        cartList: List<String?>.from(json["cart_list"].map((x) => x)),
-        ordersList: List<String?>.from(json["orders_list"].map((x) => x)),
         v: json["__v"],
         profileImageUrl: json["profile_image_url"],
       );
@@ -75,9 +66,6 @@ class UserClass {
         "reviews_and_ratings":
             List<String?>.from(reviewsAndRatings.map((x) => x)),
         "address": List<Address>.from(address.map((x) => x.toJson())),
-        "wish_list": List<String?>.from(wishList.map((x) => x)),
-        "cart_list": List<String?>.from(cartList.map((x) => x)),
-        "orders_list": List<String?>.from(ordersList.map((x) => x)),
         "__v": v,
         "profile_image_url": profileImageUrl,
       };

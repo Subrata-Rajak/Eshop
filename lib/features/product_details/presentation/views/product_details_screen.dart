@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eshop/config/routes/route_args.dart';
+import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/core/common/widgets.dart';
 import 'package:eshop/core/values/colors.dart';
 import 'package:eshop/features/product_details/domain/entities/product_entity.dart';
@@ -97,12 +98,54 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               buildTypeList(size, productDetails),
               buildDescription(size, productDetails),
               buildPrice(size, productDetails),
-              buildAddToCartButton(
-                size,
-                productDetails,
-                isInCart,
-              )
+              Row(
+                children: [
+                  buildBuyNowButton(
+                    size,
+                    productDetails,
+                  ),
+                  buildAddToCartButton(
+                    size,
+                    productDetails,
+                    isInCart,
+                  ),
+                ],
+              ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container buildBuyNowButton(
+    Size size,
+    ProductDetailsEntity? productDetails,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      width: size.width * 0.5,
+      height: 55,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.colors.darkBlue,
+          padding: const EdgeInsets.symmetric(vertical: 15),
+        ),
+        onPressed: () {
+          context.push(
+            AppRoutePaths.paths.orderSummaryPath,
+            extra: OrderSummaryScreenArgs(
+              cartDetails: null,
+              productDetails: productDetails,
+            ),
+          );
+        },
+        child: Text(
+          "Buy Now",
+          style: TextStyle(
+            color: AppColors.colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
           ),
         ),
       ),
@@ -121,7 +164,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           if (state is AddingToCartState || state is RemovingFromCartState) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              width: size.width,
+              width: size.width * 0.5,
+              height: 55,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.colors.darkBlue,
@@ -135,7 +179,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           } else if (state is AddedToCartSuccessfullyState) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              width: size.width,
+              width: size.width * 0.5,
+              height: 55,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.colors.darkBlue,
@@ -159,7 +204,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   style: TextStyle(
                     color: AppColors.colors.white,
                     fontWeight: FontWeight.w600,
-                    fontSize: 20,
+                    fontSize: state.isAdded ? 15 : 20,
                   ),
                 ),
               ),
@@ -167,7 +212,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           } else if (state is RemovedFromCartSuccessfulState) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              width: size.width,
+              width: size.width * 0.5,
+              height: 55,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.colors.darkBlue,
@@ -191,7 +237,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   style: TextStyle(
                     color: AppColors.colors.white,
                     fontWeight: FontWeight.w600,
-                    fontSize: 20,
+                    fontSize: state.isRemoved ? 20 : 15,
                   ),
                 ),
               ),
@@ -200,7 +246,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               state is AddedToCartErrorState) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              width: size.width,
+              width: size.width * 0.5,
+              height: 55,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.colors.darkBlue,
@@ -224,7 +271,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   style: TextStyle(
                     color: AppColors.colors.white,
                     fontWeight: FontWeight.w600,
-                    fontSize: 20,
+                    fontSize: isInCart ? 15 : 20,
                   ),
                 ),
               ),
@@ -232,7 +279,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           }
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            width: size.width,
+            width: size.width * 0.5,
+            height: 55,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.colors.darkBlue,
@@ -256,7 +304,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 style: TextStyle(
                   color: AppColors.colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 20,
+                  fontSize: isInCart ? 15 : 20,
                 ),
               ),
             ),

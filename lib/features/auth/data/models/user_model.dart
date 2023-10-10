@@ -39,9 +39,6 @@ class UserClass {
   String password;
   List<dynamic> reviewsAndRatings;
   List<Address> address;
-  List<dynamic> wishList;
-  List<dynamic> cartList;
-  List<dynamic> ordersList;
   int v;
   String profileImageUrl;
 
@@ -52,9 +49,6 @@ class UserClass {
     required this.password,
     required this.reviewsAndRatings,
     required this.address,
-    required this.wishList,
-    required this.cartList,
-    required this.ordersList,
     required this.v,
     required this.profileImageUrl,
   });
@@ -68,9 +62,6 @@ class UserClass {
             List<dynamic>.from(json["reviews_and_ratings"].map((x) => x)),
         address:
             List<Address>.from(json["address"].map((x) => Address.fromJson(x))),
-        wishList: List<dynamic>.from(json["wish_list"].map((x) => x)),
-        cartList: List<dynamic>.from(json["cart_list"].map((x) => x)),
-        ordersList: List<dynamic>.from(json["orders_list"].map((x) => x)),
         v: json["__v"],
         profileImageUrl: json["profile_image_url"],
       );
@@ -83,9 +74,6 @@ class UserClass {
         "reviews_and_ratings":
             List<dynamic>.from(reviewsAndRatings.map((x) => x)),
         "address": List<dynamic>.from(address.map((x) => x.toJson())),
-        "wish_list": List<dynamic>.from(wishList.map((x) => x)),
-        "cart_list": List<dynamic>.from(cartList.map((x) => x)),
-        "orders_list": List<dynamic>.from(ordersList.map((x) => x)),
         "__v": v,
         "profile_image_url": profileImageUrl,
       };

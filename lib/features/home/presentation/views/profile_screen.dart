@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
     final activityFunctions = [
       () {},
       wishlistActivity,
-      () {},
+      shippingAddressActivity,
       () {},
       () {},
       () {},
@@ -199,5 +199,9 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
 
   wishlistActivity() {
     context.push(AppRoutePaths.paths.wishlistPath);
+  }
+
+  shippingAddressActivity() {
+    context.push(AppRoutePaths.paths.addressPath);
   }
 }

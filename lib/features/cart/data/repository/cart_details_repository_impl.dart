@@ -21,4 +21,9 @@ class CartDetailsRepositoryImpl implements CartDetailsRepository {
   Future<bool> increaseCartQuantity({required String productId}) async {
     return await cartDetailsService.increaseCartQuantity(productId: productId);
   }
+
+  @override
+  Future<bool> removeFromCart({required String productId}) async {
+    return await cartDetailsService.removeFromCart(productId: productId);
+  }
 }

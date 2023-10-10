@@ -1,3 +1,8 @@
+import 'package:eshop/features/address/data/data_source/remote/address_details_service.dart';
+import 'package:eshop/features/address/data/repository/address_details_repository_impl.dart';
+import 'package:eshop/features/address/domain/repositories/address_details_repository.dart';
+import 'package:eshop/features/address/domain/usecases/get_addresses_usecase.dart';
+import 'package:eshop/features/address/presentation/blocs/address_details_screen_bloc/address_details_screen_bloc.dart';
 import 'package:eshop/features/auth/data/data_source/remote/auth_service.dart';
 import 'package:eshop/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:eshop/features/auth/domain/repositories/auth_repository.dart';
@@ -15,6 +20,7 @@ import 'package:eshop/features/auth/presentation/blocs/update_password_screen_bl
 import 'package:eshop/features/cart/data/data_source/remote/cart_details_service.dart';
 import 'package:eshop/features/cart/data/repository/cart_details_repository_impl.dart';
 import 'package:eshop/features/cart/domain/repository/cart_details_repository.dart';
+import 'package:eshop/features/cart/domain/usecases/cd_remove_from_cart_details_usecase.dart';
 import 'package:eshop/features/cart/domain/usecases/decrease_cart_quantity_usecase.dart';
 import 'package:eshop/features/cart/domain/usecases/get_cart_details_usecase.dart';
 import 'package:eshop/features/cart/domain/usecases/increase_cart_quantity_usecase.dart';
@@ -38,6 +44,16 @@ import 'package:eshop/features/home/domain/usecases/get_wishlist_usecase.dart';
 import 'package:eshop/features/home/presentation/blocs/home_screen_bloc/home_screen_bloc.dart';
 import 'package:eshop/features/home/presentation/blocs/profile_screen_bloc/profile_Screen_bloc.dart';
 import 'package:eshop/features/home/presentation/blocs/wishlist_screen_bloc/wishlist_screen_bloc.dart';
+import 'package:eshop/features/order_details/data/data_source/remote/order_details_service.dart';
+import 'package:eshop/features/order_details/data/data_source/remote/selected_address_service.dart';
+import 'package:eshop/features/order_details/data/repositories/order_details_repository_impl.dart';
+import 'package:eshop/features/order_details/data/repositories/selected_address_repository_impl.dart';
+import 'package:eshop/features/order_details/domain/repositories/order_details_repository.dart';
+import 'package:eshop/features/order_details/domain/repositories/selected_address_repository.dart';
+import 'package:eshop/features/order_details/domain/usecases/get_selected_address_usecase.dart';
+import 'package:eshop/features/order_details/domain/usecases/place_order_usecase.dart';
+import 'package:eshop/features/order_details/presentation/blocs/order_summary_bloc/order_summary_bloc.dart';
+import 'package:eshop/features/order_details/presentation/blocs/payment_method_screen_bloc/payment_method_screen_bloc.dart';
 import 'package:eshop/features/product_details/data/data_source/remote/product_details_cart_service.dart';
 import 'package:eshop/features/product_details/data/data_source/remote/product_service.dart';
 import 'package:eshop/features/product_details/data/data_source/remote/wishlist_service.dart';
@@ -132,12 +148,31 @@ Future<void> initDep() async {
       getCartDetailsUsecase: sl.call(),
       increaseCartQuantityUsecase: sl.call(),
       decreaseCartQuantityUsecase: sl.call(),
+      removeFormCartUsecase: sl.call(),
     ),
   );
 
   sl.registerFactory<ProductByCategoryScreenBloc>(
     () => ProductByCategoryScreenBloc(
       getProductByCategoryUsecase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory<AddressDetailsScreenBloc>(
+    () => AddressDetailsScreenBloc(
+      getAddressesUsecase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory<OrderSummaryScreenBloc>(
+    () => OrderSummaryScreenBloc(
+      getSelectedAddressUsecase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory<PaymentMethodScreenBloc>(
+    () => PaymentMethodScreenBloc(
+      placeOrderUsecase: sl.call(),
     ),
   );
 
@@ -163,6 +198,12 @@ Future<void> initDep() async {
   sl.registerSingleton<CartDetailsService>(CartDetailsService());
 
   sl.registerSingleton<ProductByCategoryService>(ProductByCategoryService());
+
+  sl.registerSingleton<AddressDetailsService>(AddressDetailsService());
+
+  sl.registerSingleton<SelectedAddressService>(SelectedAddressService());
+
+  sl.registerSingleton<OrderDetailsService>(OrderDetailsService());
 
   //repositories
   sl.registerSingleton<AuthRepository>(
@@ -222,6 +263,24 @@ Future<void> initDep() async {
   sl.registerSingleton<ProductByCategoryRepository>(
     ProductByCategoryRepositoryImpl(
       productByCategoryService: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<AddressDetailsRepository>(
+    AddressDetailsRepositoryImpl(
+      addressDetailsService: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<SelectedAddressRepository>(
+    SelectedADdressRepositoryImpl(
+      selectedAddressService: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<OrderDetailsRepository>(
+    OrderDetailsRepositoryImpl(
+      orderDetailsService: sl.call(),
     ),
   );
 
@@ -349,6 +408,30 @@ Future<void> initDep() async {
   sl.registerSingleton(
     GetProductByCategoryUsecase(
       productByCategoryRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<CDRemoveFormCartUsecase>(
+    CDRemoveFormCartUsecase(
+      cartDetailsRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<GetAddressesUsecase>(
+    GetAddressesUsecase(
+      addressDetailsRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<GetSelectedAddressUsecase>(
+    GetSelectedAddressUsecase(
+      selectedAddressRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<PlaceOrderUsecase>(
+    PlaceOrderUsecase(
+      orderDetailsRepository: sl.call(),
     ),
   );
 }

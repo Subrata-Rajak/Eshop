@@ -14,11 +14,13 @@ class CartItemCard extends StatelessWidget with CommonWidgets {
   final Size size;
   final CartDetailsProductEntity? product;
   final int index;
+  final BuildContext cartDetailsScreenContext;
   const CartItemCard({
     super.key,
     required this.size,
     required this.product,
     required this.index,
+    required this.cartDetailsScreenContext,
   });
 
   @override
@@ -82,7 +84,8 @@ class CartItemCard extends StatelessWidget with CommonWidgets {
             child: BlocBuilder<CartDetailsScreenBloc, CartDetailsScreenStates>(
               builder: (context, state) {
                 if (state is IncreasingCartQuantityState ||
-                    state is DecreasingCartQuantityState) {
+                    state is DecreasingCartQuantityState ||
+                    state is RemovingFromCartErrorState) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -186,11 +189,25 @@ class CartItemCard extends StatelessWidget with CommonWidgets {
                       ),
                       verticalSpace(height: 15),
                       GestureDetector(
-                        onTap: () => context.read<CartDetailsScreenBloc>().add(
-                              DecreaseCartQuantityEvent(
-                                productId: product!.productId,
-                              ),
-                            ),
+                        onTap: () {
+                          if (cartDetails.products[index].cartQuantity == 1) {
+                            print("Hawle");
+                            cartDetailsScreenContext
+                                .read<CartDetailsScreenBloc>()
+                                .add(
+                                  RemoveFromCartEvent(
+                                    productId: product!.productId,
+                                  ),
+                                );
+                          } else {
+                            print("hawle 2");
+                            context.read<CartDetailsScreenBloc>().add(
+                                  DecreaseCartQuantityEvent(
+                                    productId: product!.productId,
+                                  ),
+                                );
+                          }
+                        },
                         child: Icon(
                           FontAwesomeIcons.minus,
                           color: AppColors.colors.orange,
@@ -224,11 +241,25 @@ class CartItemCard extends StatelessWidget with CommonWidgets {
                     ),
                     verticalSpace(height: 15),
                     GestureDetector(
-                      onTap: () => context.read<CartDetailsScreenBloc>().add(
-                            DecreaseCartQuantityEvent(
-                              productId: product!.productId,
-                            ),
-                          ),
+                      onTap: () {
+                        if (product!.cartQuantity == 1) {
+                          print("Hawle");
+                          cartDetailsScreenContext
+                              .read<CartDetailsScreenBloc>()
+                              .add(
+                                RemoveFromCartEvent(
+                                  productId: product!.productId,
+                                ),
+                              );
+                        } else {
+                          print("hawle 2");
+                          context.read<CartDetailsScreenBloc>().add(
+                                DecreaseCartQuantityEvent(
+                                  productId: product!.productId,
+                                ),
+                              );
+                        }
+                      },
                       child: Icon(
                         FontAwesomeIcons.minus,
                         color: AppColors.colors.orange,

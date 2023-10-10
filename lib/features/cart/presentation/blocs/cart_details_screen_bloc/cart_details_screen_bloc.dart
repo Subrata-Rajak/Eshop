@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eshop/features/cart/domain/entities/cart_details_entity.dart';
+import 'package:eshop/features/cart/domain/usecases/cd_remove_from_cart_details_usecase.dart';
 import 'package:eshop/features/cart/domain/usecases/decrease_cart_quantity_usecase.dart';
 import 'package:eshop/features/cart/domain/usecases/get_cart_details_usecase.dart';
 import 'package:eshop/features/cart/domain/usecases/increase_cart_quantity_usecase.dart';
@@ -13,15 +14,18 @@ class CartDetailsScreenBloc
   final GetCartDetailsUsecase getCartDetailsUsecase;
   final IncreaseCartQuantityUsecase increaseCartQuantityUsecase;
   final DecreaseCartQuantityUsecase decreaseCartQuantityUsecase;
+  final CDRemoveFormCartUsecase removeFormCartUsecase;
 
   CartDetailsScreenBloc({
     required this.getCartDetailsUsecase,
     required this.decreaseCartQuantityUsecase,
     required this.increaseCartQuantityUsecase,
+    required this.removeFormCartUsecase,
   }) : super(CartDetailsScreenInitialState()) {
     on<FetchCartDetailsEvent>(fetchCartDetails);
     on<IncreaseCartQuantityEvent>(increaseCartQuantity);
     on<DecreaseCartQuantityEvent>(decreaseCartQuantity);
+    on<RemoveFromCartEvent>(removeFromCart);
   }
 
   FutureOr<void> fetchCartDetails(
@@ -100,6 +104,34 @@ class CartDetailsScreenBloc
       print(
           "Error while decreasing cart quantity -- Cart details bloc: $error");
       emit(DecreasingCartQuantityErrorState());
+    }
+  }
+
+  FutureOr<void> removeFromCart(
+    RemoveFromCartEvent event,
+    Emitter<CartDetailsScreenStates> emit,
+  ) async {
+    emit(RemovingFromCartState());
+
+    try {
+      var res = await removeFormCartUsecase.removeFromCart(
+        productId: event.productId,
+      );
+
+      var cartDetails = await getCartDetailsUsecase.getCartDetails();
+
+      if (res) {
+        emit(
+          RemovingFromCartSuccessfulState(
+            cartDetails: cartDetails,
+          ),
+        );
+      } else {
+        emit(RemovingFromCartErrorState());
+      }
+    } catch (error) {
+      print("Error while removing from cart -- CartScreenBloc: $error");
+      emit(RemovingFromCartErrorState());
     }
   }
 }

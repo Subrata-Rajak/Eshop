@@ -12,4 +12,8 @@ class AppRouteNames {
   final wishlistRouteName = "Wishlist";
   final cartRouteName = "Cart";
   final productByCategoryRouteName = "Product by category";
+  final addressRouteName = "Address";
+  final orderSummaryRouteName = "Order Summary";
+  final paymentMethodRouteName = "Payment Method";
+  final orderPlaceRouteName = "Order Place";
 }

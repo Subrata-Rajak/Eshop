@@ -13,4 +13,8 @@ class AppRoutePaths {
   final wishlistPath = "/wishlist";
   final cartPath = '/cart';
   final productByCategoryPath = '/product_by_category';
+  final addressPath = '/address';
+  final orderSummaryPath = '/order_summary';
+  final paymentMethodPath = '/payment_method';
+  final orderPlacePath = '/order_place';
 }

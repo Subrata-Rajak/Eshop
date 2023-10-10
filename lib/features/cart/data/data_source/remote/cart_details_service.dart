@@ -128,4 +128,42 @@ class CartDetailsService {
 
     return res;
   }
+
+  Future<bool> removeFromCart({required String productId}) async {
+    final userEmail =
+        GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userEmailKey);
+    final userToken =
+        GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userTokenKey);
+    bool res = false;
+
+    try {
+      final url = "${ApiConstants.constants.baseUrl}cart/remove";
+
+      final headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $userToken",
+      };
+
+      final data = {
+        "email": userEmail,
+        "productId": productId,
+      };
+
+      final uri = Uri.parse(url);
+
+      final response = await client.post(
+        uri,
+        headers: headers,
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 201) {
+        res = true;
+      }
+    } catch (error) {
+      print("Error while removing product from cart: $error");
+    }
+
+    return res;
+  }
 }

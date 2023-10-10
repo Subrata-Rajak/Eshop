@@ -33,3 +33,13 @@ class DecreasingCartQuantitySuccessfulState extends CartDetailsScreenStates {
 }
 
 class DecreasingCartQuantityErrorState extends CartDetailsScreenStates {}
+
+class RemovingFromCartState extends CartDetailsScreenStates {}
+
+class RemovingFromCartSuccessfulState extends CartDetailsScreenStates {
+  final CartDetailsEntity? cartDetails;
+
+  RemovingFromCartSuccessfulState({required this.cartDetails});
+}
+
+class RemovingFromCartErrorState extends CartDetailsScreenStates {}
