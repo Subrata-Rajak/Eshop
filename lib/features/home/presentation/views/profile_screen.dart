@@ -1,3 +1,4 @@
+import 'package:eshop/config/routes/route_args.dart';
 import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/core/common/widgets.dart';
 import 'package:eshop/core/values/colors.dart';
@@ -21,6 +22,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
+  late UserEntity? globalUser;
   final activityNames = [
     "Edit Profile",
     "Wishlist",
@@ -43,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
   @override
   Widget build(BuildContext context) {
     final activityFunctions = [
-      () {},
+      editProfileActivity,
       wishlistActivity,
       shippingAddressActivity,
       () {},
@@ -68,6 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
               );
             } else if (state is ProfileScreenDataFetchingSuccessState) {
               final user = state.user;
+              globalUser = user;
               return buildBody(
                 user: user,
                 size: size,
@@ -85,10 +88,11 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
     );
   }
 
-  SafeArea buildBody(
-      {required UserEntity? user,
-      required Size size,
-      required List activityFunctions}) {
+  SafeArea buildBody({
+    required UserEntity? user,
+    required Size size,
+    required List activityFunctions,
+  }) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -203,5 +207,12 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
 
   shippingAddressActivity() {
     context.push(AppRoutePaths.paths.addressPath);
+  }
+
+  editProfileActivity() {
+    context.push(
+      AppRoutePaths.paths.editProfilePath,
+      extra: EditProfileScreenArgs(user: globalUser),
+    );
   }
 }

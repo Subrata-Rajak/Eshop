@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> with CommonWidgets {
           children: [
             GestureDetector(
               onTap: () {
-                //todo: implement search feature
+                context.push(AppRoutePaths.paths.searchPath);
               },
               child: Icon(
                 FontAwesomeIcons.magnifyingGlass,

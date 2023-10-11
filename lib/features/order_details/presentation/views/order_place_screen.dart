@@ -104,7 +104,6 @@ class _OrderPlaceScreenState extends State<OrderPlaceScreen>
                       onPressed: () {
                         while (context.canPop()) {
                           final currentRoute = ModalRoute.of(context);
-                          print(currentRoute?.settings.name);
                           if (currentRoute?.settings.name ==
                               AppRouteNames.names.homeRouteName) {
                             break;

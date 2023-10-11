@@ -10,6 +10,9 @@ class UserMapper {
       name: user.user.name,
       email: user.user.email,
       password: user.user.password,
+      bio: user.user.bio,
+      gender: user.user.gender,
+      phone: user.user.phone,
       profileImageUrl: user.user.profileImageUrl,
       v: user.user.v,
       addresses: user.user.address
@@ -40,6 +43,9 @@ class UserMapper {
       email: entity.email,
       password: entity.password,
       reviewsAndRatings: entity.reviewsAndRatings,
+      bio: entity.bio,
+      gender: entity.gender,
+      phone: entity.phone,
       address: entity.addresses
           .map(
             (address) => usermodel.Address(

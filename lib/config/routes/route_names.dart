@@ -16,4 +16,6 @@ class AppRouteNames {
   final orderSummaryRouteName = "Order Summary";
   final paymentMethodRouteName = "Payment Method";
   final orderPlaceRouteName = "Order Place";
+  final editProfileRouteName = "Edit Profile";
+  final searchRouteName = "Search";
 }

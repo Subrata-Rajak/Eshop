@@ -15,4 +15,10 @@ abstract class UserRepoSitory {
     required String email,
     required String url,
   });
+  Future<bool> updateProfileInfo({
+    required String name,
+    required String bio,
+    required String gender,
+    required String phone,
+  });
 }

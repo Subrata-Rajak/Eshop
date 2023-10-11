@@ -8,6 +8,7 @@ import 'package:eshop/features/auth/presentation/views/login_screen.dart';
 import 'package:eshop/features/auth/presentation/views/otp_verification_screen.dart';
 import 'package:eshop/features/auth/presentation/views/register_screen.dart';
 import 'package:eshop/features/cart/presentation/views/cart_screen.dart';
+import 'package:eshop/features/home/presentation/views/edit_profile_screen.dart';
 import 'package:eshop/features/home/presentation/views/home_screen.dart';
 import 'package:eshop/features/home/presentation/views/profile_screen.dart';
 import 'package:eshop/features/home/presentation/views/wishlist_screen.dart';
@@ -15,6 +16,7 @@ import 'package:eshop/features/order_details/presentation/views/order_place_scre
 import 'package:eshop/features/order_details/presentation/views/order_summary.dart';
 import 'package:eshop/features/order_details/presentation/views/payment_method_screen.dart';
 import 'package:eshop/features/product_details/presentation/views/product_details_screen.dart';
+import 'package:eshop/features/search/presentation/views/search_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/products_by_category/presentation/views/products_by_category_screen.dart';
@@ -146,6 +148,23 @@ class AppRoutes {
         builder: (context, state) {
           OrderSummaryScreenArgs args = state.extra as OrderSummaryScreenArgs;
           return OrderSummaryScreen(args: args);
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.editProfilePath,
+        name: AppRouteNames.names.editProfileRouteName,
+        builder: (context, state) {
+          EditProfileScreenArgs args = state.extra as EditProfileScreenArgs;
+          return EditProfileScreen(
+            args: args,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.searchPath,
+        name: AppRouteNames.names.searchRouteName,
+        builder: (context, state) {
+          return const SearchScreen();
         },
       ),
     ],

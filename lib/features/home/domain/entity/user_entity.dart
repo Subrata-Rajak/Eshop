@@ -5,6 +5,9 @@ class UserEntity {
   final String password;
   final String profileImageUrl;
   final int v;
+  final String bio;
+  final String gender;
+  final String phone;
   final List<Address> addresses;
   final List<String?> reviewsAndRatings;
 
@@ -15,6 +18,9 @@ class UserEntity {
     required this.password,
     required this.profileImageUrl,
     required this.v,
+    required this.bio,
+    required this.gender,
+    required this.phone,
     required this.addresses,
     required this.reviewsAndRatings,
   });

@@ -17,4 +17,6 @@ class AppRoutePaths {
   final orderSummaryPath = '/order_summary';
   final paymentMethodPath = '/payment_method';
   final orderPlacePath = '/order_place';
+  final editProfilePath = '/edit_profile';
+  final searchPath = '/search';
 }

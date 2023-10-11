@@ -1,21 +1,19 @@
 import 'package:eshop/config/routes/route_args.dart';
 import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/core/common/widgets.dart';
-import 'package:eshop/core/values/colors.dart';
-import 'package:eshop/features/home/domain/entity/wishlist_items_entity.dart';
+import 'package:eshop/features/search/domain/entities/search_product_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class WishlistCard extends StatelessWidget with CommonWidgets {
-  final WishlistItemsProductEntity? product;
+import '../../../../core/values/colors.dart';
+
+class SearchedProductCard extends StatelessWidget with CommonWidgets {
+  final SearchedProductEntity? searchedProduct;
   final Size size;
-  final void Function()? fun;
-  const WishlistCard({
+  const SearchedProductCard({
     super.key,
-    required this.product,
+    required this.searchedProduct,
     required this.size,
-    required this.fun,
   });
 
   @override
@@ -24,44 +22,42 @@ class WishlistCard extends StatelessWidget with CommonWidgets {
       onTap: () {
         context.push(
           AppRoutePaths.paths.productDetailsPath,
-          extra: ProductDetailsScreenArgs(
-            productId: product!.productId,
-          ),
+          extra: ProductDetailsScreenArgs(productId: searchedProduct!.id),
         );
       },
       child: Container(
+        width: size.width,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0, 3),
+              blurRadius: 6,
+            ),
+          ],
+          color: AppColors.colors.white,
           borderRadius: const BorderRadius.all(
             Radius.circular(18),
           ),
-          border: Border.all(
-            color: AppColors.colors.darkBlue,
-          ),
         ),
-        width: size.width,
-        padding: const EdgeInsets.all(10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(18),
+            Image(
+              image: NetworkImage(
+                searchedProduct!.imageUrl[0],
               ),
-              child: Image(
-                width: 100,
-                height: 100,
-                image: NetworkImage(
-                  product!.productImageUrl,
-                ),
-              ),
+              width: 50,
+              height: 50,
             ),
+            horizontalSpace(width: 20),
             SizedBox(
-              width: 150,
+              width: 200,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product!.productName,
+                    searchedProduct!.name,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
@@ -69,26 +65,18 @@ class WishlistCard extends StatelessWidget with CommonWidgets {
                   ),
                   verticalSpace(height: 10),
                   Text(
-                    product!.productDescription,
+                    searchedProduct!.description,
                     overflow: TextOverflow.ellipsis,
                   ),
                   verticalSpace(height: 10),
                   Text(
-                    "₹ ${product!.productPrice.toString()}",
+                    "₹ ${searchedProduct!.price}",
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
-              ),
-            ),
-            GestureDetector(
-              onTap: fun,
-              child: Icon(
-                FontAwesomeIcons.trash,
-                color: AppColors.colors.orange,
-                size: 18,
               ),
             ),
           ],

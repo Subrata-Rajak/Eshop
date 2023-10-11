@@ -41,6 +41,8 @@ import 'package:eshop/features/home/domain/usecases/get_all_products_categories_
 import 'package:eshop/features/home/domain/usecases/get_all_products_usecase.dart';
 import 'package:eshop/features/home/domain/usecases/get_user_info_usecase.dart';
 import 'package:eshop/features/home/domain/usecases/get_wishlist_usecase.dart';
+import 'package:eshop/features/home/domain/usecases/update_profile_info_usecase.dart';
+import 'package:eshop/features/home/presentation/blocs/edit_profile_screen_bloc/edit_profile_screen_bloc.dart';
 import 'package:eshop/features/home/presentation/blocs/home_screen_bloc/home_screen_bloc.dart';
 import 'package:eshop/features/home/presentation/blocs/profile_screen_bloc/profile_Screen_bloc.dart';
 import 'package:eshop/features/home/presentation/blocs/wishlist_screen_bloc/wishlist_screen_bloc.dart';
@@ -74,6 +76,11 @@ import 'package:eshop/features/products_by_category/data/data_source/remote/prod
 import 'package:eshop/features/products_by_category/data/repository/product_by_category_repository_impl.dart';
 import 'package:eshop/features/products_by_category/domain/usecase/get_product_by_category_usecase.dart';
 import 'package:eshop/features/products_by_category/presentation/blocs/product_by_category_screen_bloc/product_by_category_screen_bloc.dart';
+import 'package:eshop/features/search/data/data_source/remote/search_product_service.dart';
+import 'package:eshop/features/search/data/repositories/searched_product_repository_impl.dart';
+import 'package:eshop/features/search/domain/repositories/search_product_repository.dart';
+import 'package:eshop/features/search/domain/usecases/search_product_usecase.dart';
+import 'package:eshop/features/search/presentation/blocs/search_product_screen_bloc/search_product_screen_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'features/product_details/domain/repositories/product_details_cart_repository.dart';
@@ -176,6 +183,18 @@ Future<void> initDep() async {
     ),
   );
 
+  sl.registerFactory<EditProfileScreenBloc>(
+    () => EditProfileScreenBloc(
+      updateProfileInfoUsecase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory<SearchProductScreenBloc>(
+    () => SearchProductScreenBloc(
+      searchProductUsecase: sl.call(),
+    ),
+  );
+
   //services
   sl.registerSingleton<AuthService>(AuthService());
 
@@ -204,6 +223,8 @@ Future<void> initDep() async {
   sl.registerSingleton<SelectedAddressService>(SelectedAddressService());
 
   sl.registerSingleton<OrderDetailsService>(OrderDetailsService());
+
+  sl.registerSingleton<SearchProductService>(SearchProductService());
 
   //repositories
   sl.registerSingleton<AuthRepository>(
@@ -281,6 +302,12 @@ Future<void> initDep() async {
   sl.registerSingleton<OrderDetailsRepository>(
     OrderDetailsRepositoryImpl(
       orderDetailsService: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<SearchedProductRepository>(
+    SearchedProductRepositoryImpl(
+      searchProductService: sl.call(),
     ),
   );
 
@@ -432,6 +459,18 @@ Future<void> initDep() async {
   sl.registerSingleton<PlaceOrderUsecase>(
     PlaceOrderUsecase(
       orderDetailsRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<UpdateProfileInfoUsecase>(
+    UpdateProfileInfoUsecase(
+      userRepoSitory: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<SearchProductUsecase>(
+    SearchProductUsecase(
+      searchedProductRepository: sl.call(),
     ),
   );
 }

@@ -29,6 +29,9 @@ class UserClass {
   String name;
   String email;
   String password;
+  String bio;
+  String gender;
+  String phone;
   List<String?> reviewsAndRatings;
   List<Address> address;
   int v;
@@ -41,6 +44,9 @@ class UserClass {
     required this.password,
     required this.reviewsAndRatings,
     required this.address,
+    required this.bio,
+    required this.gender,
+    required this.phone,
     required this.v,
     required this.profileImageUrl,
   });
@@ -56,6 +62,9 @@ class UserClass {
             List<Address>.from(json["address"].map((x) => Address.fromJson(x))),
         v: json["__v"],
         profileImageUrl: json["profile_image_url"],
+        bio: json["bio"],
+        gender: json["gender"],
+        phone: json["phone"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -68,6 +77,9 @@ class UserClass {
         "address": List<Address>.from(address.map((x) => x.toJson())),
         "__v": v,
         "profile_image_url": profileImageUrl,
+        "bio": bio,
+        "phone": phone,
+        "gender": gender,
       };
 }
 

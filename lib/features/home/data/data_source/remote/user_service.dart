@@ -136,4 +136,50 @@ class UserService {
 
     return res;
   }
+
+  Future<bool> updateUserProfileInfo({
+    required String name,
+    required String bio,
+    required String gender,
+    required String phone,
+  }) async {
+    var userToken =
+        GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userTokenKey);
+    var userEmail =
+        GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userEmailKey);
+    var res = false;
+
+    try {
+      final url = "${ApiConstants.constants.baseUrl}user/update";
+
+      final data = {
+        "email": userEmail,
+        "name": name,
+        "bio": bio,
+        "gender": gender,
+        "phone": phone,
+      };
+
+      final headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $userToken",
+      };
+
+      final uri = Uri.parse(url);
+
+      final response = await client.post(
+        uri,
+        headers: headers,
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 201) {
+        res = true;
+      }
+    } catch (error) {
+      print("Error while updating profile info -- Api: $error");
+    }
+
+    return res;
+  }
 }

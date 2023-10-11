@@ -1,6 +1,7 @@
 import 'package:eshop/features/cart/domain/entities/cart_details_entity.dart';
 import 'package:eshop/features/product_details/domain/entities/product_entity.dart';
 
+import '../../features/home/domain/entity/user_entity.dart';
 import '../../features/order_details/domain/entities/selected_address_entity.dart';
 import '../../features/order_details/presentation/blocs/payment_method_screen_bloc/payment_method_screen_bloc.dart';
 
@@ -84,4 +85,10 @@ class OrderPlaceScreenArgs {
     required this.totalAmount,
     required this.orderSubTotal,
   });
+}
+
+class EditProfileScreenArgs {
+  UserEntity? user;
+
+  EditProfileScreenArgs({required this.user});
 }

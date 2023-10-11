@@ -44,4 +44,19 @@ class UserRepositoryImpl implements UserRepoSitory {
       url: url,
     );
   }
+
+  @override
+  Future<bool> updateProfileInfo({
+    required String name,
+    required String bio,
+    required String gender,
+    required String phone,
+  }) async {
+    return await userService.updateUserProfileInfo(
+      name: name,
+      bio: bio,
+      gender: gender,
+      phone: phone,
+    );
+  }
 }
