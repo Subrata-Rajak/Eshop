@@ -1,8 +1,12 @@
 import 'package:eshop/features/address/data/data_source/remote/address_details_service.dart';
 import 'package:eshop/features/address/data/repository/address_details_repository_impl.dart';
 import 'package:eshop/features/address/domain/repositories/address_details_repository.dart';
+import 'package:eshop/features/address/domain/usecases/add_address_usecase.dart';
+import 'package:eshop/features/address/domain/usecases/edit_address_usecase.dart';
 import 'package:eshop/features/address/domain/usecases/get_addresses_usecase.dart';
+import 'package:eshop/features/address/presentation/blocs/add_address_screen_bloc/add_address_screen_bloc.dart';
 import 'package:eshop/features/address/presentation/blocs/address_details_screen_bloc/address_details_screen_bloc.dart';
+import 'package:eshop/features/address/presentation/blocs/edit_address_screen_bloc/edit_address_screen_bloc.dart';
 import 'package:eshop/features/auth/data/data_source/remote/auth_service.dart';
 import 'package:eshop/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:eshop/features/auth/domain/repositories/auth_repository.dart';
@@ -56,6 +60,13 @@ import 'package:eshop/features/order_details/domain/usecases/get_selected_addres
 import 'package:eshop/features/order_details/domain/usecases/place_order_usecase.dart';
 import 'package:eshop/features/order_details/presentation/blocs/order_summary_bloc/order_summary_bloc.dart';
 import 'package:eshop/features/order_details/presentation/blocs/payment_method_screen_bloc/payment_method_screen_bloc.dart';
+import 'package:eshop/features/order_history/data/data_sources/remote/order_history_service.dart';
+import 'package:eshop/features/order_history/data/repositories/order_history_repository_impl.dart';
+import 'package:eshop/features/order_history/domain/repositories/order_history_repository.dart';
+import 'package:eshop/features/order_history/domain/usecases/cancel_order_usecase.dart';
+import 'package:eshop/features/order_history/domain/usecases/get_order_history_usecase.dart';
+import 'package:eshop/features/order_history/presentation/blocs/order_history_details_screen_bloc/order_history_details_screen_bloc.dart';
+import 'package:eshop/features/order_history/presentation/blocs/order_history_screen_bloc/order_history_screen_bloc.dart';
 import 'package:eshop/features/product_details/data/data_source/remote/product_details_cart_service.dart';
 import 'package:eshop/features/product_details/data/data_source/remote/product_service.dart';
 import 'package:eshop/features/product_details/data/data_source/remote/wishlist_service.dart';
@@ -122,6 +133,12 @@ Future<void> initDep() async {
       getAllProductCategoriesUsecase: sl.call(),
       getUserInfoUsecase: sl.call(),
       getAllProductsUsecase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory<EditAddressScreenBloc>(
+    () => EditAddressScreenBloc(
+      editAddressUsecase: sl.call(),
     ),
   );
 
@@ -195,6 +212,24 @@ Future<void> initDep() async {
     ),
   );
 
+  sl.registerFactory<AddAddressScreenBloc>(
+    () => AddAddressScreenBloc(
+      addAddressUsecase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory<OrderHistoryScreenBloc>(
+    () => OrderHistoryScreenBloc(
+      getOrderHistoryUsecase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory<OrderHistoryDetailsScreenBloc>(
+    () => OrderHistoryDetailsScreenBloc(
+      cancelOrderUsecase: sl.call(),
+    ),
+  );
+
   //services
   sl.registerSingleton<AuthService>(AuthService());
 
@@ -225,6 +260,8 @@ Future<void> initDep() async {
   sl.registerSingleton<OrderDetailsService>(OrderDetailsService());
 
   sl.registerSingleton<SearchProductService>(SearchProductService());
+
+  sl.registerSingleton<OrderHistoryService>(OrderHistoryService());
 
   //repositories
   sl.registerSingleton<AuthRepository>(
@@ -308,6 +345,12 @@ Future<void> initDep() async {
   sl.registerSingleton<SearchedProductRepository>(
     SearchedProductRepositoryImpl(
       searchProductService: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<OrderHistoryRepository>(
+    OrderHistoryRepositoryImpl(
+      orderHistoryService: sl.call(),
     ),
   );
 
@@ -471,6 +514,30 @@ Future<void> initDep() async {
   sl.registerSingleton<SearchProductUsecase>(
     SearchProductUsecase(
       searchedProductRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<AddAddressUsecase>(
+    AddAddressUsecase(
+      addressDetailsRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<EditAddressUsecase>(
+    EditAddressUsecase(
+      addressDetailsRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<GetOrderHistoryUsecase>(
+    GetOrderHistoryUsecase(
+      orderHistoryRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<CancelOrderUsecase>(
+    CancelOrderUsecase(
+      orderHistoryRepository: sl.call(),
     ),
   );
 }

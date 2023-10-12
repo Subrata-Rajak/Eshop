@@ -1,10 +1,9 @@
-import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/core/common/widgets.dart';
-import 'package:eshop/features/address/domain/entities/address_entity.dart';
-import 'package:eshop/features/address/presentation/blocs/address_details_screen_bloc/address_details_screen_bloc.dart';
-import 'package:eshop/features/address/presentation/blocs/address_details_screen_bloc/address_details_screen_events.dart';
-import 'package:eshop/features/address/presentation/blocs/address_details_screen_bloc/address_details_screen_states.dart';
-import 'package:eshop/features/address/presentation/widgets/address_card.dart';
+import 'package:eshop/features/order_history/domain/entities/order_history_entity.dart';
+import 'package:eshop/features/order_history/presentation/blocs/order_history_screen_bloc/order_history_screen_bloc.dart';
+import 'package:eshop/features/order_history/presentation/blocs/order_history_screen_bloc/order_history_screen_events.dart';
+import 'package:eshop/features/order_history/presentation/blocs/order_history_screen_bloc/order_history_screen_states.dart';
+import 'package:eshop/features/order_history/presentation/widgets/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,30 +12,28 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/values/colors.dart';
 import '../../../../injection_container.dart';
 
-class AddressDetailsScreen extends StatefulWidget {
-  const AddressDetailsScreen({super.key});
+class OrderHistoryScreen extends StatefulWidget {
+  const OrderHistoryScreen({super.key});
 
   @override
-  State<AddressDetailsScreen> createState() => _AddressDetailsScreenState();
+  State<OrderHistoryScreen> createState() => _OrderHistoryScreenState();
 }
 
-class _AddressDetailsScreenState extends State<AddressDetailsScreen>
+class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     with CommonWidgets {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Scaffold(
-      body: BlocProvider<AddressDetailsScreenBloc>(
+      body: BlocProvider<OrderHistoryScreenBloc>(
         create: (context) => sl(),
-        child:
-            BlocBuilder<AddressDetailsScreenBloc, AddressDetailsScreenStates>(
+        child: BlocBuilder<OrderHistoryScreenBloc, OrderHistoryScreenStates>(
           builder: (context, state) {
-            if (state is AddressDetailsScreenInitialState) {
+            if (state is OrderHistoryScreenInitialState) {
               context
-                  .read<AddressDetailsScreenBloc>()
-                  .add(AddressDetailsFetchEvent());
-            } else if (state is AddressDetailsFetchingState) {
+                  .read<OrderHistoryScreenBloc>()
+                  .add(FetchOrderHistoryEvent());
+            } else if (state is FetchingOrderHistoryState) {
               return SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -55,14 +52,14 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen>
                   ),
                 ),
               );
-            } else if (state is AddressDetailsSuccessfulState) {
-              final addresses = state.addressesEntity;
+            } else if (state is FetchingSuccessfulState) {
+              final orderHistory = state.orderHistory;
               return buildBody(
                 size: size,
-                addresses: addresses,
+                orderHistory: orderHistory,
                 context: context,
               );
-            } else if (state is ADdressDetailsErrorState) {
+            } else if (state is FetchingErrorState) {
               return const Center(
                 child: Text("Something wrong happened"),
               );
@@ -76,7 +73,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen>
 
   SafeArea buildBody({
     required Size size,
-    required AddressesEntity? addresses,
+    required OrderHistoryEntity? orderHistory,
     required BuildContext context,
   }) {
     return SafeArea(
@@ -90,15 +87,15 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen>
             Expanded(
               child: ListView.separated(
                 itemBuilder: (context, index) {
-                  return AddressCard(
-                    address: addresses.addresses[index],
+                  return OrderCard(
                     size: size,
+                    orderEntity: orderHistory.orders[index],
                   );
                 },
                 separatorBuilder: (context, index) {
                   return verticalSpace(height: 30);
                 },
-                itemCount: addresses!.addresses.length,
+                itemCount: orderHistory!.orders.length,
               ),
             ),
           ],
@@ -111,40 +108,27 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen>
     return SizedBox(
       width: size.width,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  context.pop();
-                },
-                child: Icon(
-                  FontAwesomeIcons.arrowLeft,
-                  color: AppColors.colors.darkBlue,
-                ),
-              ),
-              horizontalSpace(width: 30),
-              Text(
-                "Address",
-                style: TextStyle(
-                  color: AppColors.colors.darkBlue,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24,
-                ),
-              ),
-            ],
-          ),
           GestureDetector(
             onTap: () {
-              context.push(AppRoutePaths.paths.addNewAddressPath);
+              context.pop();
             },
             child: Icon(
-              FontAwesomeIcons.plus,
+              FontAwesomeIcons.arrowLeft,
               color: AppColors.colors.darkBlue,
             ),
           ),
+          horizontalSpace(width: 30),
+          Text(
+            "Orders",
+            style: TextStyle(
+              color: AppColors.colors.darkBlue,
+              fontWeight: FontWeight.w600,
+              fontSize: 24,
+            ),
+          )
         ],
       ),
     );

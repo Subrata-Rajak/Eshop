@@ -1,4 +1,6 @@
+import 'package:eshop/features/address/domain/entities/address_entity.dart';
 import 'package:eshop/features/cart/domain/entities/cart_details_entity.dart';
+import 'package:eshop/features/order_history/domain/entities/order_history_entity.dart';
 import 'package:eshop/features/product_details/domain/entities/product_entity.dart';
 
 import '../../features/home/domain/entity/user_entity.dart';
@@ -91,4 +93,16 @@ class EditProfileScreenArgs {
   UserEntity? user;
 
   EditProfileScreenArgs({required this.user});
+}
+
+class EditAddressScreenArgs {
+  AddressEntity? addressEntity;
+
+  EditAddressScreenArgs({required this.addressEntity});
+}
+
+class OrderHistoryDetailsScreenArgs {
+  OrderEntity orderEntity;
+
+  OrderHistoryDetailsScreenArgs({required this.orderEntity});
 }

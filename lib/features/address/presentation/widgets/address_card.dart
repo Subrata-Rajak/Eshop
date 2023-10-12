@@ -1,8 +1,11 @@
+import 'package:eshop/config/routes/route_args.dart';
+import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/core/common/widgets.dart';
 import 'package:eshop/core/values/colors.dart';
 import 'package:eshop/features/address/domain/entities/address_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class AddressCard extends StatelessWidget with CommonWidgets {
   final AddressEntity? address;
@@ -89,6 +92,12 @@ class AddressCard extends StatelessWidget with CommonWidgets {
             ),
           ),
           GestureDetector(
+            onTap: () {
+              context.push(
+                AppRoutePaths.paths.editAddressPath,
+                extra: EditAddressScreenArgs(addressEntity: address),
+              );
+            },
             child: Text(
               "Edit",
               style: TextStyle(

@@ -18,4 +18,8 @@ class AppRouteNames {
   final orderPlaceRouteName = "Order Place";
   final editProfileRouteName = "Edit Profile";
   final searchRouteName = "Search";
+  final addNewAddressRouteName = "Add Address";
+  final editAddressRouteName = "Edit Address";
+  final orderHistoryRouteName = "Order History";
+  final orderHistoryDetailsRouteName = "Order History Details";
 }

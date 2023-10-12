@@ -50,54 +50,6 @@ class UserService {
     return userEntity;
   }
 
-  Future<bool> addAddress({
-    required String email,
-    required String country,
-    required String state,
-    required String city,
-    required String landmark,
-    required String pincode,
-    required String area,
-  }) async {
-    var res = false;
-    var userToken =
-        GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userTokenKey);
-    try {
-      final url = "${ApiConstants.constants.baseUrl}user/address";
-
-      final data = {
-        "email": email,
-        "country": country,
-        "state": state,
-        "city": city,
-        "landmark": landmark,
-        "pincode": pincode,
-        "area": area,
-      };
-
-      final headers = {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $userToken",
-      };
-
-      final uri = Uri.parse(url);
-
-      final response = await client.post(
-        uri,
-        headers: headers,
-        body: jsonEncode(data),
-      );
-
-      if (response.statusCode == 201) {
-        res = true;
-      }
-    } catch (error) {
-      print("Error while adding address $error");
-    }
-
-    return res;
-  }
-
   Future<bool> updateProfileImageUrl({
     required String email,
     required String url,

@@ -1,7 +1,9 @@
 import 'package:eshop/config/routes/route_args.dart';
 import 'package:eshop/config/routes/route_names.dart';
 import 'package:eshop/config/routes/route_paths.dart';
+import 'package:eshop/features/address/presentation/views/add_new_address_screen.dart';
 import 'package:eshop/features/address/presentation/views/address_details_screen.dart';
+import 'package:eshop/features/address/presentation/views/edit_address_screen.dart';
 import 'package:eshop/features/auth/presentation/views/email_for_otp_screen.dart';
 import 'package:eshop/features/auth/presentation/views/update_password_screen.dart';
 import 'package:eshop/features/auth/presentation/views/login_screen.dart';
@@ -15,6 +17,8 @@ import 'package:eshop/features/home/presentation/views/wishlist_screen.dart';
 import 'package:eshop/features/order_details/presentation/views/order_place_screen.dart';
 import 'package:eshop/features/order_details/presentation/views/order_summary.dart';
 import 'package:eshop/features/order_details/presentation/views/payment_method_screen.dart';
+import 'package:eshop/features/order_history/presentation/views/order_history_details_screen.dart';
+import 'package:eshop/features/order_history/presentation/views/order_history_screen.dart';
 import 'package:eshop/features/product_details/presentation/views/product_details_screen.dart';
 import 'package:eshop/features/search/presentation/views/search_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -165,6 +169,37 @@ class AppRoutes {
         name: AppRouteNames.names.searchRouteName,
         builder: (context, state) {
           return const SearchScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.addNewAddressPath,
+        name: AppRouteNames.names.addNewAddressRouteName,
+        builder: (context, state) {
+          return const AddNewAddressScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.editAddressPath,
+        name: AppRouteNames.names.editAddressRouteName,
+        builder: (context, state) {
+          EditAddressScreenArgs args = state.extra as EditAddressScreenArgs;
+          return EditAddressScreen(args: args);
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.orderHistoryDetailsPath,
+        name: AppRouteNames.names.orderHistoryDetailsRouteName,
+        builder: (context, state) {
+          OrderHistoryDetailsScreenArgs args =
+              state.extra as OrderHistoryDetailsScreenArgs;
+          return OrderHistoryDetailsScreen(args: args);
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.orderHistoryPath,
+        name: AppRouteNames.names.orderHistoryRouteName,
+        builder: (context, state) {
+          return const OrderHistoryScreen();
         },
       ),
     ],

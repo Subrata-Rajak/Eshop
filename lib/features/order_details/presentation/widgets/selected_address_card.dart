@@ -27,7 +27,7 @@ class SelectedAddressCard extends StatelessWidget with CommonWidgets {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -45,6 +45,7 @@ class SelectedAddressCard extends StatelessWidget with CommonWidgets {
               ),
             ),
           ),
+          horizontalSpace(width: 30),
           SizedBox(
             width: size.width * 0.5,
             child: Column(
@@ -88,15 +89,15 @@ class SelectedAddressCard extends StatelessWidget with CommonWidgets {
               ],
             ),
           ),
-          GestureDetector(
-            child: Text(
-              "Change",
-              style: TextStyle(
-                color: AppColors.colors.orange,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+          // GestureDetector(
+          //   child: Text(
+          //     "Change",
+          //     style: TextStyle(
+          //       color: AppColors.colors.orange,
+          //       fontWeight: FontWeight.w600,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

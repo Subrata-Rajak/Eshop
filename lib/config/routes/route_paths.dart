@@ -19,4 +19,8 @@ class AppRoutePaths {
   final orderPlacePath = '/order_place';
   final editProfilePath = '/edit_profile';
   final searchPath = '/search';
+  final addNewAddressPath = '/add_new_address';
+  final editAddressPath = '/edit_address';
+  final orderHistoryPath = '/order_history';
+  final orderHistoryDetailsPath = '/order_history_details';
 }

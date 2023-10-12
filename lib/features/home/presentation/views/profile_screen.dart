@@ -27,19 +27,13 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
     "Edit Profile",
     "Wishlist",
     "Shipping Address",
-    "Payment Methods",
     "Order History",
-    "Delivery Status",
-    "Language",
   ];
   final activityIcons = [
     FontAwesomeIcons.userPen,
     FontAwesomeIcons.solidHeart,
     FontAwesomeIcons.flag,
-    FontAwesomeIcons.creditCard,
     FontAwesomeIcons.list,
-    FontAwesomeIcons.locationPin,
-    FontAwesomeIcons.language,
   ];
 
   @override
@@ -48,10 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
       editProfileActivity,
       wishlistActivity,
       shippingAddressActivity,
-      () {},
-      () {},
-      () {},
-      () {},
+      orderHistoryActivity,
     ];
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -214,5 +205,9 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
       AppRoutePaths.paths.editProfilePath,
       extra: EditProfileScreenArgs(user: globalUser),
     );
+  }
+
+  orderHistoryActivity() {
+    context.push(AppRoutePaths.paths.orderHistoryPath);
   }
 }

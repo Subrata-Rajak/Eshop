@@ -9,27 +9,6 @@ class UserRepositoryImpl implements UserRepoSitory {
   UserRepositoryImpl({required this.userService});
 
   @override
-  Future<bool> addAddress({
-    required String email,
-    required String country,
-    required String state,
-    required String city,
-    required String landmark,
-    required String pincode,
-    required String area,
-  }) {
-    return userService.addAddress(
-      email: email,
-      country: country,
-      state: state,
-      city: city,
-      landmark: landmark,
-      pincode: pincode,
-      area: area,
-    );
-  }
-
-  @override
   Future<UserEntity?> getUserInfo() {
     return userService.getUserInfo();
   }

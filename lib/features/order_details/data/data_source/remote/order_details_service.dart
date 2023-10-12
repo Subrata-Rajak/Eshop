@@ -55,7 +55,7 @@ class OrderDetailsService {
             : "${DateTime.now()}",
         "customerEmail": userEmail,
         "orderItems": orderItemsFromCartDetails == null
-            ? [orderItemsFromProductDetails!.toOrderItem()]
+            ? orderItemsFromProductDetails!.toOrderItem()
             : orderItemsFromCartDetails.toOrderItems(),
         "totalDiscounts": "",
         "totalAmount": totalAmount,
