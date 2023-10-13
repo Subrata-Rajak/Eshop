@@ -1,10 +1,14 @@
+import 'package:eshop/config/get_storage/get_box.dart';
+import 'package:eshop/config/get_storage/local_keys.dart';
 import 'package:eshop/config/routes/route_args.dart';
 import 'package:eshop/config/routes/route_names.dart';
 import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/features/address/presentation/views/add_new_address_screen.dart';
 import 'package:eshop/features/address/presentation/views/address_details_screen.dart';
 import 'package:eshop/features/address/presentation/views/edit_address_screen.dart';
+import 'package:eshop/features/auth/presentation/views/collect_user_details_screen.dart';
 import 'package:eshop/features/auth/presentation/views/email_for_otp_screen.dart';
+import 'package:eshop/features/auth/presentation/views/select_profile_image_url_screen.dart';
 import 'package:eshop/features/auth/presentation/views/update_password_screen.dart';
 import 'package:eshop/features/auth/presentation/views/login_screen.dart';
 import 'package:eshop/features/auth/presentation/views/otp_verification_screen.dart';
@@ -202,7 +206,65 @@ class AppRoutes {
           return const OrderHistoryScreen();
         },
       ),
+      GoRoute(
+        path: AppRoutePaths.paths.selectProfileImagePath,
+        name: AppRouteNames.names.selectProfileImageUrlRouteName,
+        builder: (context, state) {
+          return const SelectProfileImageUrlScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.paths.collectUserDetailsPath,
+        name: AppRouteNames.names.collectUserDetailsRouteName,
+        builder: (context, state) {
+          return const CollectUserDetailsScreen();
+        },
+      ),
     ],
-    initialLocation: AppRoutePaths.paths.homePath,
+    initialLocation: getInitialPath(),
   );
 }
+
+getInitialPath() {
+  final isLoggedIn =
+      GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.isLoggedIn);
+  final isRegistered =
+      GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.isRegistered);
+  final isUploadedImage =
+      GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.isUploadedImage);
+  final isCollectedUserDetails = GetBox.getBox
+      .readFromLocalDb(key: AppLocalKeys.keys.isCollectedUserDetails);
+
+  return isLoggedIn != null
+      ? isLoggedIn
+          ? AppRoutePaths.paths.homePath
+          : AppRoutePaths.paths.loginPath
+      : isRegistered != null
+          ? isUploadedImage != null
+              ? isCollectedUserDetails != null
+                  ? AppRoutePaths.paths.homePath
+                  : AppRoutePaths.paths.collectUserDetailsPath
+              : AppRoutePaths.paths.selectProfileImagePath
+          : AppRoutePaths.paths.registerPath;
+}
+
+
+/*
+isLoggedIn != null
+      ? isLoggedIn == true
+          ? AppRoutePaths.paths.homePath
+          : isRegistered != null
+              ? isUploadedImage != null
+                  ? isCollectedUserDetails != null
+                      ? AppRoutePaths.paths.homePath
+                      : AppRoutePaths.paths.collectUserDetailsPath
+                  : AppRoutePaths.paths.selectProfileImagePath
+              : AppRoutePaths.paths.registerPath
+      : isCollectedUserDetails != null
+          ? AppRoutePaths.paths.homePath
+          : isUploadedImage != null
+              ? AppRoutePaths.paths.collectUserDetailsPath
+              : isRegistered != null
+                  ? AppRoutePaths.paths.selectProfileImagePath
+                  : AppRoutePaths.paths.registerPath;
+*/

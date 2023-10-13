@@ -22,4 +22,6 @@ class AppRouteNames {
   final editAddressRouteName = "Edit Address";
   final orderHistoryRouteName = "Order History";
   final orderHistoryDetailsRouteName = "Order History Details";
+  final selectProfileImageUrlRouteName = "Select Profile Image Url";
+  final collectUserDetailsRouteName = "Collect User Details";
 }

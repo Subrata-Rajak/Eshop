@@ -75,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> with CommonWidgets {
       child: BlocConsumer<RegisterBloc, RegisterStates>(
         listener: (context, state) {
           if (state is RegisterSuccessState) {
-            context.replace(AppRoutePaths.paths.loginPath);
+            context.replace(AppRoutePaths.paths.selectProfileImagePath);
           }
         },
         builder: (context, state) {

@@ -1,53 +1,48 @@
-import 'package:eshop/config/routes/route_args.dart';
+import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/core/common/widgets.dart';
-import 'package:eshop/features/home/presentation/blocs/edit_profile_screen_bloc/edit_profile_screen_bloc.dart';
-import 'package:eshop/features/home/presentation/blocs/edit_profile_screen_bloc/edit_profile_screen_events.dart';
-import 'package:eshop/features/home/presentation/blocs/edit_profile_screen_bloc/edit_profile_screen_states.dart';
-import 'package:eshop/features/home/presentation/widgets/custom_edit_profile_field.dart';
-import 'package:eshop/injection_container.dart';
+import 'package:eshop/features/auth/presentation/blocs/collect_user_info_screen_bloc/collect_user_info_screen_bloc.dart';
+import 'package:eshop/features/auth/presentation/blocs/collect_user_info_screen_bloc/collect_user_info_screen_events.dart';
+import 'package:eshop/features/auth/presentation/blocs/collect_user_info_screen_bloc/collect_user_info_screen_states.dart';
+import 'package:eshop/features/auth/presentation/widgets/user_details_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../../config/routes/route_names.dart';
-import '../../../../config/routes/route_paths.dart';
 import '../../../../core/values/colors.dart';
+import '../../../../injection_container.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  final EditProfileScreenArgs args;
-  const EditProfileScreen({
-    super.key,
-    required this.args,
-  });
+class CollectUserDetailsScreen extends StatefulWidget {
+  const CollectUserDetailsScreen({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  State<CollectUserDetailsScreen> createState() =>
+      _CollectUserDetailsScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen>
+class _CollectUserDetailsScreenState extends State<CollectUserDetailsScreen>
     with CommonWidgets {
-  TextEditingController nameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    nameController.text = widget.args.user!.name;
-    bioController.text = widget.args.user!.bio;
-    genderController.text = widget.args.user!.gender;
-    phoneController.text = widget.args.user!.phone;
-  }
+  TextEditingController countryController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
+  TextEditingController landmarkController = TextEditingController();
+  TextEditingController pincodeController = TextEditingController();
+  TextEditingController areaController = TextEditingController();
 
   @override
   void dispose() {
-    nameController.dispose();
     bioController.dispose();
     genderController.dispose();
     phoneController.dispose();
+    countryController.dispose();
+    cityController.dispose();
+    stateController.dispose();
+    landmarkController.dispose();
+    pincodeController.dispose();
+    areaController.dispose();
     super.dispose();
   }
 
@@ -55,24 +50,17 @@ class _EditProfileScreenState extends State<EditProfileScreen>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: BlocProvider<EditProfileScreenBloc>(
+      body: BlocProvider<CollectUserInfoScreenBloc>(
         create: (context) => sl(),
-        child: BlocConsumer<EditProfileScreenBloc, EditProfileScreenStates>(
+        child: BlocConsumer<CollectUserInfoScreenBloc,
+            CollectUserInfoScreenStates>(
           listener: (context, state) {
-            if (state is ProfileInfoUpdatingSuccessfulState) {
-              while (context.canPop()) {
-                final currentRoute = ModalRoute.of(context);
-                if (currentRoute?.settings.name ==
-                    AppRouteNames.names.homeRouteName) {
-                  break;
-                }
-                context.pop();
-              }
-              context.replace(AppRoutePaths.paths.homePath);
+            if (state is CollectingSuccessfulState) {
+              context.push(AppRoutePaths.paths.homePath);
             }
           },
           builder: (context, state) {
-            if (state is ProfileInfoUpdatingErrorState) {
+            if (state is CollectingErrorState) {
               return SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -98,11 +86,16 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                         backgroundColor: AppColors.colors.red,
                       ),
                       onPressed: () {
-                        context.read<EditProfileScreenBloc>().add(
-                              UpdateUserProfileInfoEvent(
-                                name: nameController.text,
-                                bio: bioController.text,
+                        context.read<CollectUserInfoScreenBloc>().add(
+                              CollectUserInfoEvent(
+                                country: countryController.text,
+                                state: stateController.text,
+                                city: cityController.text,
+                                area: areaController.text,
+                                landmark: landmarkController.text,
+                                pincode: pincodeController.text,
                                 gender: genderController.text,
+                                bio: bioController.text,
                                 phone: phoneController.text,
                               ),
                             );
@@ -117,7 +110,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                   ],
                 ),
               );
-            } else if (state is UpdatingProfileInfoState) {
+            } else if (state is CollectingUserInfoState) {
               return SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -161,22 +154,47 @@ class _EditProfileScreenState extends State<EditProfileScreen>
             children: [
               buildHeader(size, neededContext),
               verticalSpace(height: 30),
-              CustomEditProfileField(
-                controller: nameController,
-                labelName: "Name",
+              UserDetailsField(
+                controller: countryController,
+                labelName: "Country",
+              ),
+              verticalSpace(height: 30),
+              UserDetailsField(
+                controller: cityController,
+                labelName: "City",
+              ),
+              verticalSpace(height: 30),
+              UserDetailsField(
+                controller: stateController,
+                labelName: "State",
+              ),
+              verticalSpace(height: 30),
+              UserDetailsField(
+                controller: areaController,
+                labelName: "Area",
+              ),
+              verticalSpace(height: 30),
+              UserDetailsField(
+                controller: landmarkController,
+                labelName: "Landmark",
+              ),
+              verticalSpace(height: 30),
+              UserDetailsField(
+                controller: pincodeController,
+                labelName: "Pincode",
               ),
               verticalSpace(height: 15),
-              CustomEditProfileField(
+              UserDetailsField(
                 controller: bioController,
                 labelName: "Bio",
               ),
               verticalSpace(height: 15),
-              CustomEditProfileField(
+              UserDetailsField(
                 controller: genderController,
                 labelName: "Gender",
               ),
               verticalSpace(height: 15),
-              CustomEditProfileField(
+              UserDetailsField(
                 controller: phoneController,
                 labelName: "Phone",
               ),
@@ -199,58 +217,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
         children: [
           Row(
             children: [
-              GestureDetector(
-                onTap: () {
-                  if (nameController.text != widget.args.user!.name ||
-                      bioController.text != widget.args.user!.bio ||
-                      genderController.text != widget.args.user!.gender ||
-                      phoneController.text != widget.args.user!.phone) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text("Are you sure?"),
-                          content: const Text(
-                            "You haven't saved the changes. Are you sure, you want to exit??",
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                context.pop();
-                                context.pop();
-                              },
-                              child: const Text("Exit"),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                context.pop();
-                                neededContext.read<EditProfileScreenBloc>().add(
-                                      UpdateUserProfileInfoEvent(
-                                        name: nameController.text,
-                                        bio: bioController.text,
-                                        gender: genderController.text,
-                                        phone: phoneController.text,
-                                      ),
-                                    );
-                              },
-                              child: const Text("Update"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else {
-                    context.pop();
-                  }
-                },
-                child: Icon(
-                  FontAwesomeIcons.arrowLeft,
-                  color: AppColors.colors.darkBlue,
-                ),
-              ),
-              horizontalSpace(width: 20),
               Text(
-                "Edit Profile",
+                "User Details",
                 style: TextStyle(
                   color: AppColors.colors.darkBlue,
                   fontWeight: FontWeight.w600,
@@ -265,14 +233,29 @@ class _EditProfileScreenState extends State<EditProfileScreen>
               backgroundColor: AppColors.colors.orange,
             ),
             onPressed: () {
-              neededContext.read<EditProfileScreenBloc>().add(
-                    UpdateUserProfileInfoEvent(
-                      name: nameController.text,
-                      bio: bioController.text,
-                      gender: genderController.text,
-                      phone: phoneController.text,
-                    ),
-                  );
+              if (countryController.text.isNotEmpty &&
+                  stateController.text.isNotEmpty &&
+                  cityController.text.isNotEmpty &&
+                  areaController.text.isNotEmpty &&
+                  landmarkController.text.isNotEmpty &&
+                  pincodeController.text.isNotEmpty &&
+                  genderController.text.isNotEmpty &&
+                  bioController.text.isNotEmpty &&
+                  phoneController.text.isNotEmpty) {
+                neededContext.read<CollectUserInfoScreenBloc>().add(
+                      CollectUserInfoEvent(
+                        country: countryController.text,
+                        state: stateController.text,
+                        city: cityController.text,
+                        area: areaController.text,
+                        landmark: landmarkController.text,
+                        pincode: pincodeController.text,
+                        gender: genderController.text,
+                        bio: bioController.text,
+                        phone: phoneController.text,
+                      ),
+                    );
+              }
             },
             child: Text(
               "Update",

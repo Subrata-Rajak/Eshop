@@ -38,26 +38,23 @@ class AuthService {
       User user;
 
       if (response.statusCode == 200) {
-        res = true;
         user = userFromJson(response.body);
-        var userToken =
-            GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userTokenKey);
-        var userEmail =
-            GetBox.getBox.readFromLocalDb(key: AppLocalKeys.keys.userEmailKey);
+        await GetBox.getBox.writeToLocalDb(
+          key: AppLocalKeys.keys.userTokenKey,
+          value: user.token,
+        );
 
-        if (userToken == null) {
-          await GetBox.getBox.writeToLocalDb(
-            key: AppLocalKeys.keys.userTokenKey,
-            value: user.token,
-          );
-        }
+        await GetBox.getBox.writeToLocalDb(
+          key: AppLocalKeys.keys.userEmailKey,
+          value: user.user.email,
+        );
+        await GetBox.getBox
+            .writeToLocalDb(key: AppLocalKeys.keys.isRegistered, value: true);
 
-        if (userEmail == null) {
-          await GetBox.getBox.writeToLocalDb(
-            key: AppLocalKeys.keys.userEmailKey,
-            value: user.user.email,
-          );
-        }
+        await GetBox.getBox
+            .writeToLocalDb(key: AppLocalKeys.keys.isLoggedIn, value: true);
+
+        res = true;
       }
     } catch (error) {
       print("Error while Logging in the user: $error");
@@ -92,7 +89,21 @@ class AuthService {
         body: jsonEncode(data),
       );
 
+      User user;
+
       if (response.statusCode == 201) {
+        user = userFromJson(response.body);
+
+        await GetBox.getBox.writeToLocalDb(
+          key: AppLocalKeys.keys.userTokenKey,
+          value: user.token,
+        );
+        await GetBox.getBox.writeToLocalDb(
+          key: AppLocalKeys.keys.userEmailKey,
+          value: user.user.email,
+        );
+        await GetBox.getBox
+            .writeToLocalDb(key: AppLocalKeys.keys.isRegistered, value: true);
         res = true;
       }
     } catch (error) {

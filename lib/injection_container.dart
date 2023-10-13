@@ -8,18 +8,27 @@ import 'package:eshop/features/address/presentation/blocs/add_address_screen_blo
 import 'package:eshop/features/address/presentation/blocs/address_details_screen_bloc/address_details_screen_bloc.dart';
 import 'package:eshop/features/address/presentation/blocs/edit_address_screen_bloc/edit_address_screen_bloc.dart';
 import 'package:eshop/features/auth/data/data_source/remote/auth_service.dart';
+import 'package:eshop/features/auth/data/data_source/remote/collect_user_details_service.dart';
+import 'package:eshop/features/auth/data/data_source/remote/upload_image_url_service.dart';
 import 'package:eshop/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:eshop/features/auth/data/repositories/collect_user_details_repository_impl.dart';
+import 'package:eshop/features/auth/data/repositories/upload_image_repository_impl.dart';
 import 'package:eshop/features/auth/domain/repositories/auth_repository.dart';
+import 'package:eshop/features/auth/domain/repositories/upload_profile_image_url_repository.dart';
+import 'package:eshop/features/auth/domain/usecases/collect_user_details_usecase.dart';
 import 'package:eshop/features/auth/domain/usecases/login_usecase.dart';
 import 'package:eshop/features/auth/domain/usecases/register_usecase.dart';
 import 'package:eshop/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:eshop/features/auth/domain/usecases/send_otp_usecase.dart';
 import 'package:eshop/features/auth/domain/usecases/update_password_usecase.dart';
+import 'package:eshop/features/auth/domain/usecases/upload_image_url_usecase.dart';
 import 'package:eshop/features/auth/domain/usecases/verify_otp_usecase.dart';
+import 'package:eshop/features/auth/presentation/blocs/collect_user_info_screen_bloc/collect_user_info_screen_bloc.dart';
 import 'package:eshop/features/auth/presentation/blocs/email_for_otp_screen_bloc/email_for_otp_screen_bloc.dart';
 import 'package:eshop/features/auth/presentation/blocs/login_screen_bloc/login_screen_bloc.dart';
 import 'package:eshop/features/auth/presentation/blocs/otp_verification_screen_bloc/otp_verification_screen_bloc.dart';
 import 'package:eshop/features/auth/presentation/blocs/register_screen_bloc/register_screen_bloc.dart';
+import 'package:eshop/features/auth/presentation/blocs/select_profile_image_screen_bloc/select_profile_image_screen_bloc.dart';
 import 'package:eshop/features/auth/presentation/blocs/update_password_screen_bloc/update_password_screen_bloc.dart';
 import 'package:eshop/features/cart/data/data_source/remote/cart_details_service.dart';
 import 'package:eshop/features/cart/data/repository/cart_details_repository_impl.dart';
@@ -94,6 +103,7 @@ import 'package:eshop/features/search/domain/usecases/search_product_usecase.dar
 import 'package:eshop/features/search/presentation/blocs/search_product_screen_bloc/search_product_screen_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import 'features/auth/domain/repositories/collect_user_details_repository.dart';
 import 'features/product_details/domain/repositories/product_details_cart_repository.dart';
 import 'features/products_by_category/domain/repository/product_by_category_repository.dart';
 
@@ -230,6 +240,18 @@ Future<void> initDep() async {
     ),
   );
 
+  sl.registerFactory<SelectProfileImageScreenBloc>(
+    () => SelectProfileImageScreenBloc(
+      uploadImageUrlUsecase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory<CollectUserInfoScreenBloc>(
+    () => CollectUserInfoScreenBloc(
+      collectUserDetailsUsecase: sl.call(),
+    ),
+  );
+
   //services
   sl.registerSingleton<AuthService>(AuthService());
 
@@ -262,6 +284,10 @@ Future<void> initDep() async {
   sl.registerSingleton<SearchProductService>(SearchProductService());
 
   sl.registerSingleton<OrderHistoryService>(OrderHistoryService());
+
+  sl.registerSingleton<UploadImageService>(UploadImageService());
+
+  sl.registerSingleton<CollectUserDetailsService>(CollectUserDetailsService());
 
   //repositories
   sl.registerSingleton<AuthRepository>(
@@ -351,6 +377,18 @@ Future<void> initDep() async {
   sl.registerSingleton<OrderHistoryRepository>(
     OrderHistoryRepositoryImpl(
       orderHistoryService: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<UploadProfileImageUrlRepository>(
+    UploadImageRepositoryImpl(
+      uploadImageService: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<CollectUserDetailsRepository>(
+    CollectUserDetailsRepositoryImpl(
+      collectUserDetailsService: sl.call(),
     ),
   );
 
@@ -538,6 +576,18 @@ Future<void> initDep() async {
   sl.registerSingleton<CancelOrderUsecase>(
     CancelOrderUsecase(
       orderHistoryRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<UploadImageUrlUsecase>(
+    UploadImageUrlUsecase(
+      uploadProfileImageUrlRepository: sl.call(),
+    ),
+  );
+
+  sl.registerSingleton<CollectUserDetailsUsecase>(
+    CollectUserDetailsUsecase(
+      collectUserDetailsRepository: sl.call(),
     ),
   );
 }

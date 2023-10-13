@@ -23,4 +23,6 @@ class AppRoutePaths {
   final editAddressPath = '/edit_address';
   final orderHistoryPath = '/order_history';
   final orderHistoryDetailsPath = '/order_history_details';
+  final selectProfileImagePath = '/select_profile_image_url';
+  final collectUserDetailsPath = '/collect_user_details';
 }

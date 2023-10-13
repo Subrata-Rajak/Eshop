@@ -33,14 +33,14 @@ class User {
 }
 
 class UserClass {
-  String id;
+  String? id;
   String name;
   String email;
   String password;
   List<dynamic> reviewsAndRatings;
   List<Address> address;
   int v;
-  String profileImageUrl;
+  String? profileImageUrl;
 
   UserClass({
     required this.id,

@@ -43,7 +43,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen>
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Column(
                     children: [
-                      buildHeader(size, context),
+                      buildHeader(size, context, false),
                       Expanded(
                         child: Center(
                           child: CircularProgressIndicator(
@@ -61,15 +61,19 @@ class _CartDetailsScreenState extends State<CartDetailsScreen>
               return buildBody(size, cartDetails);
             } else if (state is CartDetailsFetchingErrorState) {
               return SafeArea(
-                child: Column(
-                  children: [
-                    buildHeader(size, context),
-                    const Expanded(
-                      child: Center(
-                        child: Text("Something wrong happened"),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    children: [
+                      buildHeader(size, context, false),
+                      const Expanded(
+                        child: Center(
+                          child: Text("You don't have anything in your cart"),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }
@@ -83,6 +87,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen>
   SizedBox buildHeader(
     Size size,
     BuildContext context,
+    bool error,
   ) {
     return SizedBox(
       width: size.width,
@@ -112,27 +117,29 @@ class _CartDetailsScreenState extends State<CartDetailsScreen>
               ),
             ],
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.colors.orange,
-              elevation: 0,
-            ),
-            onPressed: () {
-              context.push(
-                AppRoutePaths.paths.orderSummaryPath,
-                extra: OrderSummaryScreenArgs(
-                  cartDetails: globalCartDetails,
-                  productDetails: null,
-                ),
-              );
-            },
-            child: Text(
-              "Checkout",
-              style: TextStyle(
-                color: AppColors.colors.white,
-              ),
-            ),
-          ),
+          error
+              ? ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.colors.orange,
+                    elevation: 0,
+                  ),
+                  onPressed: () {
+                    context.push(
+                      AppRoutePaths.paths.orderSummaryPath,
+                      extra: OrderSummaryScreenArgs(
+                        cartDetails: globalCartDetails,
+                        productDetails: null,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Checkout",
+                    style: TextStyle(
+                      color: AppColors.colors.white,
+                    ),
+                  ),
+                )
+              : emptyBox(),
         ],
       ),
     );
@@ -147,6 +154,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen>
             buildHeader(
               size,
               context,
+              true,
             ),
             verticalSpace(height: 20),
             BlocProvider<CartDetailsScreenBloc>(
@@ -158,20 +166,25 @@ class _CartDetailsScreenState extends State<CartDetailsScreen>
                     final cartDetails = state.cartDetails;
                     globalCartDetails = cartDetails;
                     return Expanded(
-                      child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          return CartItemCard(
-                            size: size,
-                            product: cartDetails.products[index],
-                            index: index,
-                            cartDetailsScreenContext: context,
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return verticalSpace(height: 18);
-                        },
-                        itemCount: cartDetails!.products.length,
-                      ),
+                      child: cartDetails!.products.isEmpty
+                          ? const Center(
+                              child:
+                                  Text("You don't have anything in your cart"),
+                            )
+                          : ListView.separated(
+                              itemBuilder: (context, index) {
+                                return CartItemCard(
+                                  size: size,
+                                  product: cartDetails.products[index],
+                                  index: index,
+                                  cartDetailsScreenContext: context,
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return verticalSpace(height: 18);
+                              },
+                              itemCount: cartDetails.products.length,
+                            ),
                     );
                   } else if (state is RemovingFromCartState) {
                     return Expanded(
@@ -189,20 +202,24 @@ class _CartDetailsScreenState extends State<CartDetailsScreen>
                     );
                   }
                   return Expanded(
-                    child: ListView.separated(
-                      itemBuilder: (context, index) {
-                        return CartItemCard(
-                          size: size,
-                          product: cartDetails.products[index],
-                          index: index,
-                          cartDetailsScreenContext: context,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return verticalSpace(height: 18);
-                      },
-                      itemCount: cartDetails!.products.length,
-                    ),
+                    child: cartDetails!.products.isEmpty
+                        ? const Center(
+                            child: Text("You don't have anything in your cart"),
+                          )
+                        : ListView.separated(
+                            itemBuilder: (context, index) {
+                              return CartItemCard(
+                                size: size,
+                                product: cartDetails.products[index],
+                                index: index,
+                                cartDetailsScreenContext: context,
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return verticalSpace(height: 18);
+                            },
+                            itemCount: cartDetails.products.length,
+                          ),
                   );
                 },
               ),

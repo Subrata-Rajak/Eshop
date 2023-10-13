@@ -1,3 +1,5 @@
+import 'package:eshop/config/get_storage/get_box.dart';
+import 'package:eshop/config/get_storage/local_keys.dart';
 import 'package:eshop/config/routes/route_args.dart';
 import 'package:eshop/config/routes/route_paths.dart';
 import 'package:eshop/core/common/widgets.dart';
@@ -181,9 +183,16 @@ class _ProfileScreenState extends State<ProfileScreen> with CommonWidgets {
             ),
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () async {
+              await GetBox.getBox.writeToLocalDb(
+                key: AppLocalKeys.keys.isLoggedIn,
+                value: false,
+              );
+
+              context.push(AppRoutePaths.paths.loginPath);
+            },
             child: Icon(
-              FontAwesomeIcons.gear,
+              FontAwesomeIcons.rightFromBracket,
               color: AppColors.colors.darkBlue,
             ),
           ),

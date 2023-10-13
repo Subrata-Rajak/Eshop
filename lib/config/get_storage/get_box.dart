@@ -12,7 +12,7 @@ class GetBox {
     await box.write(key, value);
   }
 
-  String? readFromLocalDb({required String key}) {
+  dynamic readFromLocalDb({required String key}) {
     return box.read(key);
   }
 }

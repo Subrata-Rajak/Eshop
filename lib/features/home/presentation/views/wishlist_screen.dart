@@ -59,8 +59,24 @@ class _WishlistScreenState extends State<WishlistScreen> with CommonWidgets {
                 context: context,
               );
             } else if (state is WishlistScreenDataFetchingErrorState) {
-              return const Center(
-                child: Text("Something wrong happened"),
+              return SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      verticalSpace(height: 20),
+                      buildHeader(size),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            "You don't have any items in wishlist now",
+                            style: TextStyle(color: AppColors.colors.black),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               );
             } else if (state is RemovedSuccessfulState) {
               final wishlist = state.wishlist;
@@ -70,8 +86,21 @@ class _WishlistScreenState extends State<WishlistScreen> with CommonWidgets {
                 context: context,
               );
             } else if (state is RemovedErrorState) {
-              return const Center(
-                child: Text("Something wrong happened"),
+              return SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      verticalSpace(height: 20),
+                      buildHeader(size),
+                      const Expanded(
+                        child: Center(
+                          child: Text("Something wrong happened"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               );
             }
             return emptyBox();
@@ -95,25 +124,33 @@ class _WishlistScreenState extends State<WishlistScreen> with CommonWidgets {
             buildHeader(size),
             verticalSpace(height: 30),
             Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return WishlistCard(
-                    product: wishlist.products[index],
-                    size: size,
-                    fun: () {
-                      context.read<WishlistScreenBloc>().add(
-                            RemoveFromWishlistEvent(
-                              productId: wishlist.products[index].productId,
-                            ),
-                          );
-                    },
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return verticalSpace(height: 30);
-                },
-                itemCount: wishlist!.products.length,
-              ),
+              child: wishlist!.products.isEmpty
+                  ? Center(
+                      child: Text(
+                        "You don't have any items in wishlist now",
+                        style: TextStyle(color: AppColors.colors.black),
+                      ),
+                    )
+                  : ListView.separated(
+                      itemBuilder: (context, index) {
+                        return WishlistCard(
+                          product: wishlist.products[index],
+                          size: size,
+                          fun: () {
+                            context.read<WishlistScreenBloc>().add(
+                                  RemoveFromWishlistEvent(
+                                    productId:
+                                        wishlist.products[index].productId,
+                                  ),
+                                );
+                          },
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return verticalSpace(height: 30);
+                      },
+                      itemCount: wishlist.products.length,
+                    ),
             ),
           ],
         ),

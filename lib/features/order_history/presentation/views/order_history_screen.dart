@@ -60,8 +60,21 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                 context: context,
               );
             } else if (state is FetchingErrorState) {
-              return const Center(
-                child: Text("Something wrong happened"),
+              return SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      verticalSpace(height: 20),
+                      buildHeader(size),
+                      const Expanded(
+                        child: Center(
+                          child: Text("Something wrong happened"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               );
             }
             return emptyBox();
@@ -85,18 +98,22 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
             buildHeader(size),
             verticalSpace(height: 30),
             Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return OrderCard(
-                    size: size,
-                    orderEntity: orderHistory.orders[index],
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return verticalSpace(height: 30);
-                },
-                itemCount: orderHistory!.orders.length,
-              ),
+              child: orderHistory!.orders.isEmpty
+                  ? const Center(
+                      child: Text("You haven't ordered anything so far"),
+                    )
+                  : ListView.separated(
+                      itemBuilder: (context, index) {
+                        return OrderCard(
+                          size: size,
+                          orderEntity: orderHistory.orders[index],
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return verticalSpace(height: 30);
+                      },
+                      itemCount: orderHistory.orders.length,
+                    ),
             ),
           ],
         ),
